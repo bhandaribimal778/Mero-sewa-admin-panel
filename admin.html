@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>मेरो सेवा नेपाल — व्यवस्थापक ड्यासबोर्ड (Admin Panel)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0F3D78;
+      --primary-dark: #0A2540;
+      --primary-light: #2563EB;
+      --accent: #059669;
+      --accent-light: #10B981;
+      --warning: #D97706;
+      --danger: #DC2626;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --border: #E2E8F0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Mukta', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Navigation */
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 12px rgba(15, 61, 120, 0.15);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-icon {
+      background: rgba(255, 255, 255, 0.15);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .brand h1 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .brand span {
+      font-size: 0.8rem;
+      opacity: 0.85;
+    }
+
+    .auth-bar {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .user-pill {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 0.35rem 0.85rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      font-weight: 600;
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.95rem;
+    }
+
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-light); }
+    .btn-accent { background: var(--accent); color: white; }
+    .btn-accent:hover { background: var(--accent-light); }
+    .btn-danger { background: var(--danger); color: white; }
+    .btn-danger:hover { opacity: 0.9; }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
+    .btn-outline:hover { background: #F1F5F9; }
+    .btn-sm { padding: 0.25rem 0.6rem; font-size: 0.82rem; border-radius: 6px; }
+
+    main {
+      flex: 1;
+      max-width: 1280px;
+      width: 100%;
+      margin: 1.5rem auto;
+      padding: 0 1rem;
+    }
+
+    #loginView {
+      max-width: 440px;
+      margin: 4rem auto;
+      background: white;
+      padding: 2.5rem 2rem;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+      text-align: center;
+    }
+
+    #loginView h2 { color: var(--primary); font-size: 1.6rem; margin-bottom: 0.5rem; }
+    #loginView p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2rem; line-height: 1.5; }
+
+    .btn-google {
+      background: white;
+      border: 1px solid #CBD5E1;
+      color: #334155;
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 30px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    }
+    .btn-google:hover { background: #F8FAFC; }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 1.25rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+      border-left: 5px solid var(--primary);
+    }
+    .stat-card.green { border-left-color: var(--accent); }
+    .stat-card.amber { border-left-color: var(--warning); }
+    .stat-card.blue { border-left-color: var(--primary-light); }
+
+    .stat-title {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    .stat-value {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 1.5rem;
+    }
+
+    .tab-btn {
+      padding: 0.75rem 1.25rem;
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      border-radius: 0;
+      font-weight: 700;
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    .tab-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    /* Toolbar */
+    .toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      background: white;
+      padding: 1rem;
+      border-radius: 12px;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+
+    .toolbar-left, .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    select, input[type="text"], input[type="number"], textarea {
+      padding: 0.5rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      background: white;
+      outline: none;
+    }
+
+    select:focus, input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
+      border-color: var(--primary);
+    }
+
+    /* Table */
+    .table-container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      background: #F1F5F9;
+      color: var(--text-muted);
+      padding: 0.85rem 1rem;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+      font-size: 0.95rem;
+    }
+
+    tr:hover { background: #F8FAFC; }
+
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .badge-pending { background: #FEF3C7; color: #B45309; }
+    .badge-accepted { background: #DBEAFE; color: #1D4ED8; }
+    .badge-completed { background: #D1FAE5; color: #047857; }
+    .badge-cancelled { background: #FEE2E2; color: #B91C1C; }
+    .badge-active { background: #D1FAE5; color: #047857; }
+    .badge-inactive { background: #F1F5F9; color: #64748B; }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 1rem;
+    }
+
+    .modal-backdrop.open { display: flex; }
+
+    .modal {
+      background: white;
+      border-radius: 16px;
+      max-width: 520px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 1.5rem;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .modal-header h3 {
+      font-size: 1.35rem;
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    .form-group { margin-bottom: 1rem; }
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      color: var(--text-main);
+    }
+    .form-group input, .form-group select, .form-group textarea { width: 100%; }
+    .form-row { display: flex; gap: 1rem; }
+    .form-row .form-group { flex: 1; }
+    .form-check {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      margin-top: 0.25rem;
+    }
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+    }
+
+    .alert {
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+    .alert-danger { background: #FEE2E2; color: #991B1B; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <div class="brand-icon">🔧</div>
+      <div>
+        <h1>मेरो सेवा नेपाल</h1>
+        <span>व्यवस्थापक नियन्त्रण कक्ष (Admin Panel)</span>
+      </div>
+    </div>
+    <div class="auth-bar" id="authHeader" style="display: none;">
+      <span class="user-pill" id="userEmailLabel">Admin</span>
+      <button class="btn-danger btn-sm" id="logoutBtn">लगआउट</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Login View -->
+    <div id="loginView">
+      <div style="font-size: 3rem; margin-bottom: 0.5rem;">🔒</div>
+      <h2>व्यवस्थापक लगइन</h2>
+      <p>यो ड्यासबोर्ड आधिकारिक एडमिनहरूको लागि मात्र सुरक्षित छ। कृपया आफ्नो आधिकारिक Google खाताबाट लगइन गर्नुहोस्।</p>
+      <div id="loginAlert" style="display: none;" class="alert alert-danger"></div>
+      <button class="btn-google" id="googleLoginBtn">
+        <svg width="20" height="20" viewBox="0 0 48 48">
+          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+        </svg>
+        Google मार्फत लगइन गर्नुहोस्
+      </button>
+    </div>
+
+    <!-- Protected Dashboard View -->
+    <div id="dashboardView" style="display: none;">
+      
+      <!-- Metrics -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-title">सक्रिय प्राविधिकहरू</div>
+          <div class="stat-value" id="activeProvidersCount">0</div>
+        </div>
+        <div class="stat-card amber">
+          <div class="stat-title">प्रतीक्षारत सेवा अर्डरहरू</div>
+          <div class="stat-value" id="pendingBookingsCount">0</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-title">स्वीकृत भएका कामहरू</div>
+          <div class="stat-value" id="acceptedBookingsCount">0</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-title">सम्पन्न सेवाहरू</div>
+          <div class="stat-value" id="completedBookingsCount">0</div>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="providersTab">सेवा प्रदायक व्यवस्थापन (Providers)</button>
+        <button class="tab-btn" data-tab="bookingsTab">ग्राहक बुकिङहरू (Bookings)</button>
+      </div>
+
+      <!-- TAB 1: PROVIDERS MANAGEMENT -->
+      <div id="providersTab" class="tab-content">
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <select id="providerCityFilter">
+              <option value="All">सबै स्थान (All Cities)</option>
+              <option value="Tulsipur">तुलसीपुर (Tulsipur)</option>
+              <option value="Ghorahi">घोराही (Ghorahi)</option>
+              <option value="Lamahi">लमही (Lamahi)</option>
+              <option value="Bhalubang">भालुवाङ (Bhalubang)</option>
+            </select>
+            <select id="providerCategoryFilter">
+              <option value="All">सबै कोटि (All Categories)</option>
+              <option value="electrician">इलेक्ट्रिसियन (Electrician)</option>
+              <option value="plumber">प्लम्बर (Plumber)</option>
+              <option value="other_repairs">अन्य मर्मत (Other)</option>
+            </select>
+          </div>
+          <div class="toolbar-right">
+            <button class="btn-outline btn-sm" id="seedBtn">नमुना प्राविधिक लोड (Seed)</button>
+            <button class="btn-primary" id="addProviderBtn">+ नयाँ प्राविधिक थप्नुहोस्</button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>नाम (Name)</th>
+                <th>कोटि (Category)</th>
+                <th>स्थान (City)</th>
+                <th>सम्पर्क (Phone)</th>
+                <th>स्थिति (Status)</th>
+                <th>अनुभव / रेटिङ</th>
+                <th>कार्य (Actions)</th>
+              </tr>
+            </thead>
+            <tbody id="providersTableBody">
+              <tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">डेटा लोड हुँदैछ...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 2: BOOKINGS MANAGEMENT -->
+      <div id="bookingsTab" class="tab-content" style="display: none;">
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <select id="bookingStatusFilter">
+              <option value="All">सबै स्थिति (All Status)</option>
+              <option value="pending">प्रतीक्षारत (Pending)</option>
+              <option value="accepted">स्वीकृत (Accepted)</option>
+              <option value="completed">सम्पन्न (Completed)</option>
+              <option value="cancelled">रद्द (Cancelled)</option>
+            </select>
+            <select id="bookingCityFilter">
+              <option value="All">सबै स्थान (All Cities)</option>
+              <option value="Tulsipur">तुलसीपुर (Tulsipur)</option>
+              <option value="Ghorahi">घोराही (Ghorahi)</option>
+              <option value="Lamahi">लमही (Lamahi)</option>
+              <option value="Bhalubang">भालुवाङ (Bhalubang)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>ग्राहक (Customer)</th>
+                <th>सम्पर्क फोन</th>
+                <th>सेवा / प्रदायक</th>
+                <th>ठेगाना (Address)</th>
+                <th>कामको विवरण (Work Details)</th>
+                <th>समय (Preferred Time)</th>
+                <th>स्थिति (Status)</th>
+                <th>अवस्था परिवर्तन</th>
+              </tr>
+            </thead>
+            <tbody id="bookingsTableBody">
+              <tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 2rem;">डेटा लोड हुँदैछ...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Add / Edit Provider Modal -->
+  <div class="modal-backdrop" id="providerModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalTitle">नयाँ प्राविधिक थप्नुहोस्</h3>
+        <button class="btn-outline btn-sm" id="closeModalBtn">✕</button>
+      </div>
+      <form id="providerForm">
+        <input type="hidden" id="providerId">
+        <div class="form-group">
+          <label>प्राविधिकको नाम (Full Name) *</label>
+          <input type="text" id="provName" required placeholder="उदा: राम बहादुर थापा">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>सेवा कोटि (Category) *</label>
+            <select id="provCategory" required>
+              <option value="electrician">इलेक्ट्रिसियन (Electrician)</option>
+              <option value="plumber">प्लम्बर (Plumber)</option>
+              <option value="other_repairs">अन्य मर्मत (Other Repairs)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>सहर / स्थान (City) *</label>
+            <select id="provCity" required>
+              <option value="Tulsipur">तुलसीपुर (Tulsipur)</option>
+              <option value="Ghorahi">घोराही (Ghorahi)</option>
+              <option value="Lamahi">लमही (Lamahi)</option>
+              <option value="Bhalubang">भालुवाङ (Bhalubang)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>सेवा विवरण (Description) *</label>
+          <textarea id="provDesc" rows="3" required placeholder="दक्षता, अनुभव तथा मर्मत गर्ने सामग्रीहरू खुलाउनुहोस्..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>मोबाइल नम्बर (Phone Number)</label>
+          <input type="text" id="provPhone" placeholder="उदा: 9847123456">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>अनुभव वर्ष (Experience)</label>
+            <input type="number" id="provExp" value="5" min="0" max="60">
+          </div>
+          <div class="form-group">
+            <label>रेटिङ (Rating 0-5)</label>
+            <input type="number" id="provRating" value="4.8" step="0.1" min="0" max="5">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-check">
+            <input type="checkbox" id="provPhonePublic" checked>
+            फोन नम्बर सार्वजनिक देखाउने (Public Display)
+          </label>
+          <label class="form-check">
+            <input type="checkbox" id="provActive" checked>
+            सक्रिय स्थिति (Active on Marketplace)
+          </label>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn-outline" id="cancelModalBtn">रद्द</button>
+          <button type="submit" class="btn-primary" id="saveProviderBtn">सेभ गर्नुहोस्</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Firebase Modular SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { 
+      getAuth, 
+      GoogleAuthProvider, 
+      signInWithPopup, 
+      signOut, 
+      onAuthStateChanged 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { 
+      getFirestore, 
+      collection, 
+      doc, 
+      getDoc, 
+      setDoc, 
+      updateDoc, 
+      deleteDoc, 
+      onSnapshot, 
+      serverTimestamp 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // 1. Firebase Configuration for Mero Sewa Nepal
+    const firebaseConfig = {
+      apiKey: "AIzaSyDP8T7GCdGY0_sqpqOtHkn1G6aOqxjG3gs",
+      authDomain: "mero-sewa-nepal.firebaseapp.com",
+      projectId: "mero-sewa-nepal",
+      storageBucket: "mero-sewa-nepal.firebasestorage.app",
+      messagingSenderId: "622227844528",
+      appId: "1:622227844528:android:f7b695ff38f54e8105ba75"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const googleProvider = new GoogleAuthProvider();
+
+    // Use the exact named database ID shared with the Android app
+    const DATABASE_ID = "ai-studio-android-merosewa-a6e8bf47-6ac9-4204-80ab-52fe43abc7ce";
+    const db = getFirestore(app, DATABASE_ID);
+
+    // Bootstrapped Owner Email
+    const OWNER_EMAIL = "bhandaribimal778@gmail.com";
+
+    // State Variables
+    let currentUser = null;
+    let allProviders = [];
+    let allBookings = [];
+    let unsubscribeProviders = null;
+    let unsubscribeBookings = null;
+
+    // DOM Elements
+    const loginView = document.getElementById("loginView");
+    const dashboardView = document.getElementById("dashboardView");
+    const authHeader = document.getElementById("authHeader");
+    const userEmailLabel = document.getElementById("userEmailLabel");
+    const googleLoginBtn = document.getElementById("googleLoginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const loginAlert = document.getElementById("loginAlert");
+
+    // UI Listeners
+    googleLoginBtn.addEventListener("click", async () => {
+      try {
+        loginAlert.style.display = "none";
+        await signInWithPopup(auth, googleProvider);
+      } catch (err) {
+        loginAlert.textContent = "लगइन असफल भयो: " + (err.message || err);
+        loginAlert.style.display = "block";
+      }
+    });
+
+    logoutBtn.addEventListener("click", () => signOut(auth));
+
+    // Auth State Observer
+    onAuthStateChanged(auth, async (user) => {
+      currentUser = user;
+      if (user) {
+        // Verify Administrator Privileges
+        let isAdmin = false;
+        if (user.email && user.email.toLowerCase() === OWNER_EMAIL.toLowerCase()) {
+          isAdmin = true;
+          // Ensure admin document exists
+          try {
+            const adminDocRef = doc(db, "admins", user.uid);
+            const snap = await getDoc(adminDocRef);
+            if (!snap.exists()) {
+              await setDoc(adminDocRef, {
+                role: "admin",
+                email: user.email,
+                createdAt: serverTimestamp()
+              });
+            }
+          } catch(e) { console.warn("Admin doc sync:", e); }
+        } else {
+          try {
+            const snap = await getDoc(doc(db, "admins", user.uid));
+            if (snap.exists() && snap.data().role === "admin") {
+              isAdmin = true;
+            }
+          } catch (e) {
+            console.error("Admin verification error:", e);
+          }
+        }
+
+        if (isAdmin) {
+          loginView.style.display = "none";
+          dashboardView.style.display = "block";
+          authHeader.style.display = "flex";
+          userEmailLabel.textContent = user.email;
+          startRealtimeSync();
+        } else {
+          loginAlert.textContent = "पहुँच अस्वीकृत! यो खाता (" + user.email + ") लाई व्यवस्थापक अनुमति छैन।";
+          loginAlert.style.display = "block";
+          loginView.style.display = "block";
+          dashboardView.style.display = "none";
+          authHeader.style.display = "none";
+          signOut(auth);
+        }
+      } else {
+        loginView.style.display = "block";
+        dashboardView.style.display = "none";
+        authHeader.style.display = "none";
+        stopRealtimeSync();
+      }
+    });
+
+    // Real-time Data Listeners
+    function startRealtimeSync() {
+      // 1. Providers Real-time Observation
+      unsubscribeProviders = onSnapshot(collection(db, "providers"), (snapshot) => {
+        allProviders = [];
+        snapshot.forEach(docSnap => {
+          allProviders.push({ id: docSnap.id, ...docSnap.data() });
+        });
+        renderProviders();
+        updateMetrics();
+      }, (err) => console.error("Providers stream err:", err));
+
+      // 2. Bookings Real-time Observation
+      unsubscribeBookings = onSnapshot(collection(db, "bookings"), (snapshot) => {
+        allBookings = [];
+        snapshot.forEach(docSnap => {
+          allBookings.push({ id: docSnap.id, ...docSnap.data() });
+        });
+        allBookings.sort((a,b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+        renderBookings();
+        updateMetrics();
+      }, (err) => console.error("Bookings stream err:", err));
+    }
+
+    function stopRealtimeSync() {
+      if (unsubscribeProviders) unsubscribeProviders();
+      if (unsubscribeBookings) unsubscribeBookings();
+    }
+
+    // Metrics Update
+    function updateMetrics() {
+      const active = allProviders.filter(p => p.active).length;
+      const pending = allBookings.filter(b => b.status === "pending").length;
+      const accepted = allBookings.filter(b => b.status === "accepted").length;
+      const completed = allBookings.filter(b => b.status === "completed").length;
+
+      document.getElementById("activeProvidersCount").textContent = active + " / " + allProviders.length;
+      document.getElementById("pendingBookingsCount").textContent = pending;
+      document.getElementById("acceptedBookingsCount").textContent = accepted;
+      document.getElementById("completedBookingsCount").textContent = completed;
+    }
+
+    // Render Providers Table
+    function renderProviders() {
+      const tbody = document.getElementById("providersTableBody");
+      const cityFilter = document.getElementById("providerCityFilter").value;
+      const catFilter = document.getElementById("providerCategoryFilter").value;
+
+      const filtered = allProviders.filter(p => {
+        const mCity = cityFilter === "All" || (p.city && p.city.toLowerCase() === cityFilter.toLowerCase());
+        const mCat = catFilter === "All" || (p.category && p.category.toLowerCase() === catFilter.toLowerCase());
+        return mCity && mCat;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">कुनै सेवा प्रदायक फेला परेन।</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(p => `
+        <tr>
+          <td><strong>${escapeHtml(p.name)}</strong></td>
+          <td>${getCategoryLabel(p.category)}</td>
+          <td>${escapeHtml(p.city)}</td>
+          <td>${p.phone ? escapeHtml(p.phone) : '—'} ${p.phonePublic ? '<span class="badge badge-active">सार्वजनिक</span>' : '<span class="badge badge-inactive">गोप्य</span>'}</td>
+          <td>
+            <span class="badge ${p.active ? 'badge-active' : 'badge-inactive'}">
+              ${p.active ? 'सक्रिय' : 'निष्क्रिय'}
+            </span>
+          </td>
+          <td>⭐ ${p.rating || 4.8} (${p.experienceYears || 3} वर्ष)</td>
+          <td>
+            <button class="btn-outline btn-sm" onclick="editProvider('${p.id}')">सम्पादन</button>
+            <button class="btn-sm ${p.active ? 'btn-danger' : 'btn-accent'}" onclick="toggleProviderActive('${p.id}', ${p.active})">
+              ${p.active ? 'निष्क्रिय बनाउने' : 'सक्रिय बनाउने'}
+            </button>
+            <button class="btn-danger btn-sm" onclick="deleteProvider('${p.id}', '${escapeHtml(p.name)}')">मेटाउने</button>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    // Render Bookings Table
+    function renderBookings() {
+      const tbody = document.getElementById("bookingsTableBody");
+      const statusFilter = document.getElementById("bookingStatusFilter").value;
+      const cityFilter = document.getElementById("bookingCityFilter").value;
+
+      const filtered = allBookings.filter(b => {
+        const mStatus = statusFilter === "All" || (b.status && b.status.toLowerCase() === statusFilter.toLowerCase());
+        const mCity = cityFilter === "All" || (b.city && b.city.toLowerCase() === cityFilter.toLowerCase());
+        return mStatus && mCity;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 2rem;">कुनै सेवा अर्डर फेला परेन।</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(b => `
+        <tr>
+          <td><strong>${escapeHtml(b.customerName || '—')}</strong></td>
+          <td><a href="tel:${b.customerPhone}" style="color: var(--accent); font-weight: bold; text-decoration: none;">📞 ${escapeHtml(b.customerPhone || '—')}</a></td>
+          <td><strong>${escapeHtml(b.providerName || 'कुनै पनि')}</strong><br><small style="color: var(--text-muted);">${getCategoryLabel(b.category)}</small></td>
+          <td>${escapeHtml(b.city || '')}, ${escapeHtml(b.address || '—')}</td>
+          <td style="max-width: 250px;">${escapeHtml(b.description || '—')}</td>
+          <td>${escapeHtml(b.preferredDate || '')}<br><small style="color: var(--text-muted);">${escapeHtml(b.preferredTime || '')}</small></td>
+          <td>${getStatusBadge(b.status)}</td>
+          <td>
+            <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+              ${b.status === 'pending' ? `<button class="btn-primary btn-sm" onclick="updateBookingStatus('${b.id}', 'accepted')">स्वीकार</button>` : ''}
+              ${b.status === 'accepted' ? `<button class="btn-accent btn-sm" onclick="updateBookingStatus('${b.id}', 'completed')">सम्पन्न</button>` : ''}
+              ${b.status !== 'cancelled' && b.status !== 'completed' ? `<button class="btn-danger btn-sm" onclick="updateBookingStatus('${b.id}', 'cancelled')">रद्द</button>` : ''}
+            </div>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    function getCategoryLabel(cat) {
+      switch((cat||'').toLowerCase()) {
+        case 'electrician': return '⚡ इलेक्ट्रिसियन';
+        case 'plumber': return '🚰 प्लम्बर';
+        default: return '🛠️ अन्य मर्मत';
+      }
+    }
+
+    function getStatusBadge(status) {
+      switch((status||'').toLowerCase()) {
+        case 'accepted': return '<span class="badge badge-accepted">स्वीकृत</span>';
+        case 'completed': return '<span class="badge badge-completed">सम्पन्न</span>';
+        case 'cancelled': return '<span class="badge badge-cancelled">रद्द</span>';
+        default: return '<span class="badge badge-pending">प्रतीक्षारत</span>';
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str).replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[m]);
+    }
+
+    // Status Filters Change
+    document.getElementById("providerCityFilter").addEventListener("change", renderProviders);
+    document.getElementById("providerCategoryFilter").addEventListener("change", renderProviders);
+    document.getElementById("bookingStatusFilter").addEventListener("change", renderBookings);
+    document.getElementById("bookingCityFilter").addEventListener("change", renderBookings);
+
+    // Tab Switching
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".tab-content").forEach(c => c.style.display = "none");
+        btn.classList.add("active");
+        document.getElementById(btn.dataset.tab).style.display = "block";
+      });
+    });
+
+    // Provider Modal Handling
+    const providerModal = document.getElementById("providerModal");
+    const providerForm = document.getElementById("providerForm");
+    
+    document.getElementById("addProviderBtn").addEventListener("click", () => {
+      document.getElementById("modalTitle").textContent = "नयाँ प्राविधिक थप्नुहोस्";
+      providerForm.reset();
+      document.getElementById("providerId").value = "";
+      document.getElementById("provPhonePublic").checked = true;
+      document.getElementById("provActive").checked = true;
+      providerModal.classList.add("open");
+    });
+
+    document.getElementById("closeModalBtn").addEventListener("click", () => providerModal.classList.remove("open"));
+    document.getElementById("cancelModalBtn").addEventListener("click", () => providerModal.classList.remove("open"));
+
+    window.editProvider = function(id) {
+      const p = allProviders.find(item => item.id === id);
+      if (!p) return;
+      document.getElementById("modalTitle").textContent = "प्राविधिक विवरण सम्पादन";
+      document.getElementById("providerId").value = p.id;
+      document.getElementById("provName").value = p.name || '';
+      document.getElementById("provCategory").value = p.category || 'electrician';
+      document.getElementById("provCity").value = p.city || 'Tulsipur';
+      document.getElementById("provDesc").value = p.description || '';
+      document.getElementById("provPhone").value = p.phone || '';
+      document.getElementById("provExp").value = p.experienceYears || 3;
+      document.getElementById("provRating").value = p.rating || 4.8;
+      document.getElementById("provPhonePublic").checked = p.phonePublic !== false;
+      document.getElementById("provActive").checked = p.active !== false;
+      providerModal.classList.add("open");
+    };
+
+    providerForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const id = document.getElementById("providerId").value;
+      const data = {
+        name: document.getElementById("provName").value.trim(),
+        category: document.getElementById("provCategory").value,
+        city: document.getElementById("provCity").value,
+        description: document.getElementById("provDesc").value.trim(),
+        phone: document.getElementById("provPhone").value.trim(),
+        phonePublic: document.getElementById("provPhonePublic").checked,
+        active: document.getElementById("provActive").checked,
+        experienceYears: parseInt(document.getElementById("provExp").value) || 3,
+        rating: parseFloat(document.getElementById("provRating").value) || 4.8,
+        updatedAt: serverTimestamp()
+      };
+
+      try {
+        if (id) {
+          await updateDoc(doc(db, "providers", id), data);
+        } else {
+          data.createdAt = serverTimestamp();
+          await setDoc(doc(collection(db, "providers")), data);
+        }
+        providerModal.classList.remove("open");
+      } catch (err) {
+        alert("सेभ गर्न सकिएन: " + err.message);
+      }
+    });
+
+    // Toggle Active Status
+    window.toggleProviderActive = async function(id, currentActive) {
+      try {
+        await updateDoc(doc(db, "providers", id), {
+          active: !currentActive,
+          updatedAt: serverTimestamp()
+        });
+      } catch (err) {
+        alert("त्रुटि: " + err.message);
+      }
+    };
+
+    // Delete Provider
+    window.deleteProvider = async function(id, name) {
+      if (!confirm(`के तपाईं निश्चित हुनुहुन्छ? प्राविधिक "${name}" लाई मेटाउँदा ब्याकइन्डबाट सधैंका लागि हट्नेछ।`)) return;
+      try {
+        await deleteDoc(doc(db, "providers", id));
+      } catch (err) {
+        alert("मेटाउन सकिएन: " + err.message);
+      }
+    };
+
+    // Update Booking Status
+    window.updateBookingStatus = async function(bookingId, newStatus) {
+      try {
+        await updateDoc(doc(db, "bookings", bookingId), {
+          status: newStatus,
+          updatedAt: serverTimestamp()
+        });
+      } catch (err) {
+        alert("बुकिङ स्थिति परिवर्तन गर्न सकिएन: " + err.message);
+      }
+    };
+
+    // Data Seeding Shortcut
+    document.getElementById("seedBtn").addEventListener("click", async () => {
+      if (allProviders.length > 0 && !confirm("डेटाबेसमा पहिले नै प्राविधिकहरू छन्। के तपाईं फेरि नमुना प्राविधिकहरू थप्न चाहनुहुन्छ?")) return;
+      
+      const seedData = [
+        { name: "राम बहादुर थापा (Ram B. Thapa)", category: "electrician", city: "Tulsipur", description: "घर तथा पसलको वायरिङ, इन्भर्टर जडान र बिजुली मर्मतमा १० वर्षको अनुभव।", phone: "9847812345", phonePublic: true, active: true, rating: 4.9, experienceYears: 10 },
+        { name: "सुरेश चौधरी (Suresh Chaudhary)", category: "plumber", city: "Tulsipur", description: "धारा चुहावट, नयाँ पाइप फिटिङ र सेनेटरी सम्बन्धी भरपर्दो सेवा।", phone: "9809823456", phonePublic: true, active: true, rating: 4.8, experienceYears: 7 },
+        { name: "कमल श्रेष्ठ (Kamal Shrestha)", category: "other_repairs", city: "Tulsipur", description: "रेफ्रिजरेटर, वासिङ मेसिन र मोटर पम्प मर्मत विशेषज्ञ।", phone: "9857834567", phonePublic: true, active: true, rating: 4.7, experienceYears: 8 },
+        { name: "दिनेश शर्मा (Dinesh Sharma)", category: "electrician", city: "Ghorahi", description: "घोराही बजार क्षेत्रमा छिटो र सस्तो बिजुली सेवा, थ्री-फेज लाइन मर्मत।", phone: "9847198765", phonePublic: true, active: true, rating: 4.9, experienceYears: 6 },
+        { name: "सन्तोष बुढा (Santosh Budha)", category: "plumber", city: "Ghorahi", description: "बाथरुम फिटिङ, गिजिर जडान तथा ढल निकास मर्मत।", phone: "9812345678", phonePublic: false, active: true, rating: 4.6, experienceYears: 5 },
+        { name: "प्रकाश घर्ती (Prakash Gharti)", category: "other_repairs", city: "Lamahi", description: "ग्यास चुल्हो र घरायसी विद्युतीय उपकरण मर्मत केन्द्र।", phone: "9867011223", phonePublic: true, active: true, rating: 4.7, experienceYears: 4 }
+      ];
+
+      try {
+        for (const item of seedData) {
+          item.createdAt = serverTimestamp();
+          item.updatedAt = serverTimestamp();
+          await setDoc(doc(collection(db, "providers")), item);
+        }
+        alert("नमुना प्राविधिकहरू सफलतापूर्वक लोड भए!");
+      } catch (err) {
+        alert("त्रुटि: " + err.message);
+      }
+    });
+  </script>
+</body>
+</html>

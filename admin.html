@@ -21,6 +21,25 @@
       --text-main: #0F172A;
       --text-muted: #64748B;
       --border: #E2E8F0;
+      --table-header-bg: #F1F5F9;
+      --table-hover: #F8FAFC;
+    }
+
+    body.dark-theme {
+      --primary: #3B82F6;
+      --primary-dark: #1E3A8A;
+      --primary-light: #60A5FA;
+      --accent: #10B981;
+      --accent-light: #34D399;
+      --warning: #F59E0B;
+      --danger: #EF4444;
+      --bg: #0B1120;
+      --card-bg: #1E293B;
+      --text-main: #F1F5F9;
+      --text-muted: #94A3B8;
+      --border: #334155;
+      --table-header-bg: #0F172A;
+      --table-hover: #162032;
     }
 
     * {
@@ -28,6 +47,7 @@
       margin: 0;
       padding: 0;
       font-family: 'Mukta', sans-serif;
+      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
     }
 
     body {
@@ -40,13 +60,15 @@
 
     /* Top Navigation */
     header {
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      background: linear-gradient(135deg, #0F3D78, #0A2540);
       color: white;
       padding: 1rem 1.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
       box-shadow: 0 4px 12px rgba(15, 61, 120, 0.15);
+      flex-wrap: wrap;
+      gap: 1rem;
     }
 
     .brand {
@@ -77,10 +99,34 @@
       opacity: 0.85;
     }
 
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .control-pill {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      padding: 0.4rem 0.85rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .control-pill:hover {
+      background: rgba(255, 255, 255, 0.25);
+    }
+
     .auth-bar {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 0.75rem;
     }
 
     .user-pill {
@@ -88,6 +134,7 @@
       padding: 0.35rem 0.85rem;
       border-radius: 9999px;
       font-size: 0.85rem;
+      color: white;
     }
 
     button {
@@ -96,7 +143,6 @@
       font-weight: 600;
       border-radius: 8px;
       padding: 0.5rem 1rem;
-      transition: all 0.2s ease;
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
@@ -104,13 +150,13 @@
     }
 
     .btn-primary { background: var(--primary); color: white; }
-    .btn-primary:hover { background: var(--primary-light); }
+    .btn-primary:hover { opacity: 0.92; }
     .btn-accent { background: var(--accent); color: white; }
-    .btn-accent:hover { background: var(--accent-light); }
+    .btn-accent:hover { opacity: 0.92; }
     .btn-danger { background: var(--danger); color: white; }
     .btn-danger:hover { opacity: 0.9; }
     .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
-    .btn-outline:hover { background: #F1F5F9; }
+    .btn-outline:hover { background: var(--border); }
     .btn-sm { padding: 0.25rem 0.6rem; font-size: 0.82rem; border-radius: 6px; }
 
     main {
@@ -121,23 +167,46 @@
       padding: 0 1rem;
     }
 
+    /* Auth Box */
     #loginView {
-      max-width: 440px;
-      margin: 4rem auto;
-      background: white;
-      padding: 2.5rem 2rem;
+      max-width: 460px;
+      margin: 3rem auto;
+      background: var(--card-bg);
+      padding: 2.25rem 2rem;
       border-radius: 16px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-      text-align: center;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      border: 1px solid var(--border);
     }
 
-    #loginView h2 { color: var(--primary); font-size: 1.6rem; margin-bottom: 0.5rem; }
-    #loginView p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2rem; line-height: 1.5; }
+    #loginView h2 { color: var(--primary); font-size: 1.6rem; margin-bottom: 0.5rem; text-align: center; }
+    #loginView p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.5; text-align: center; }
+
+    .auth-tabs {
+      display: flex;
+      margin-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .auth-tab-btn {
+      flex: 1;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      border-radius: 0;
+      justify-content: center;
+    }
+    .auth-tab-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
 
     .btn-google {
-      background: white;
-      border: 1px solid #CBD5E1;
-      color: #334155;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text-main);
       width: 100%;
       padding: 0.75rem;
       border-radius: 30px;
@@ -147,8 +216,25 @@
       justify-content: center;
       gap: 0.75rem;
       box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      margin-bottom: 1.25rem;
     }
-    .btn-google:hover { background: #F8FAFC; }
+    .btn-google:hover { background: var(--table-hover); }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 1rem 0;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid var(--border);
+    }
+    .divider:not(:empty)::before { margin-right: .5em; }
+    .divider:not(:empty)::after { margin-left: .5em; }
 
     /* Stats Grid */
     .stats-grid {
@@ -159,10 +245,11 @@
     }
 
     .stat-card {
-      background: white;
+      background: var(--card-bg);
       padding: 1.25rem;
       border-radius: 12px;
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+      border: 1px solid var(--border);
       border-left: 5px solid var(--primary);
     }
     .stat-card.green { border-left-color: var(--accent); }
@@ -213,11 +300,12 @@
       align-items: center;
       flex-wrap: wrap;
       gap: 1rem;
-      background: white;
+      background: var(--card-bg);
       padding: 1rem;
       border-radius: 12px;
       margin-bottom: 1rem;
       box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+      border: 1px solid var(--border);
     }
 
     .toolbar-left, .toolbar-right {
@@ -227,24 +315,26 @@
       flex-wrap: wrap;
     }
 
-    select, input[type="text"], input[type="number"], textarea {
+    select, input[type="text"], input[type="email"], input[type="password"], input[type="number"], textarea {
       padding: 0.5rem 0.85rem;
       border: 1px solid var(--border);
       border-radius: 8px;
       font-size: 0.95rem;
-      background: white;
+      background: var(--card-bg);
+      color: var(--text-main);
       outline: none;
     }
 
-    select:focus, input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
+    select:focus, input:focus, textarea:focus {
       border-color: var(--primary);
     }
 
     /* Table */
     .table-container {
-      background: white;
+      background: var(--card-bg);
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+      border: 1px solid var(--border);
       overflow-x: auto;
     }
 
@@ -255,13 +345,14 @@
     }
 
     th {
-      background: #F1F5F9;
+      background: var(--table-header-bg);
       color: var(--text-muted);
       padding: 0.85rem 1rem;
       font-weight: 700;
       font-size: 0.85rem;
       text-transform: uppercase;
       letter-spacing: 0.03em;
+      border-bottom: 1px solid var(--border);
     }
 
     td {
@@ -271,7 +362,7 @@
       font-size: 0.95rem;
     }
 
-    tr:hover { background: #F8FAFC; }
+    tr:hover { background: var(--table-hover); }
 
     .badge {
       display: inline-block;
@@ -291,7 +382,7 @@
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(15, 23, 42, 0.6);
+      background: rgba(15, 23, 42, 0.7);
       display: none;
       align-items: center;
       justify-content: center;
@@ -302,14 +393,16 @@
     .modal-backdrop.open { display: flex; }
 
     .modal {
-      background: white;
+      background: var(--card-bg);
+      color: var(--text-main);
       border-radius: 16px;
       max-width: 520px;
       width: 100%;
       max-height: 90vh;
       overflow-y: auto;
       padding: 1.5rem;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border);
     }
 
     .modal-header {
@@ -359,6 +452,7 @@
       font-size: 0.9rem;
     }
     .alert-danger { background: #FEE2E2; color: #991B1B; }
+    .alert-success { background: #D1FAE5; color: #065F46; }
   </style>
 </head>
 <body>
@@ -368,23 +462,40 @@
     <div class="brand">
       <div class="brand-icon">🔧</div>
       <div>
-        <h1>मेरो सेवा नेपाल</h1>
-        <span>व्यवस्थापक नियन्त्रण कक्ष (Admin Panel)</span>
+        <h1 id="txtBrandTitle">मेरो सेवा नेपाल</h1>
+        <span id="txtBrandSubtitle">व्यवस्थापक नियन्त्रण कक्ष (Admin Panel)</span>
       </div>
     </div>
-    <div class="auth-bar" id="authHeader" style="display: none;">
-      <span class="user-pill" id="userEmailLabel">Admin</span>
-      <button class="btn-danger btn-sm" id="logoutBtn">लगआउट</button>
+    
+    <div class="header-actions">
+      <!-- Quick Language Switcher -->
+      <button class="control-pill" id="langToggleBtn">
+        🌐 <span id="currentLangLabel">English</span>
+      </button>
+
+      <!-- Quick Theme Toggle -->
+      <button class="control-pill" id="themeToggleBtn">
+        <span id="themeIcon">🌙</span> <span id="themeLabel">Dark Mode</span>
+      </button>
+
+      <div class="auth-bar" id="authHeader" style="display: none;">
+        <span class="user-pill" id="userEmailLabel">Admin</span>
+        <button class="btn-danger btn-sm" id="logoutBtn">लगआउट</button>
+      </div>
     </div>
   </header>
 
   <main>
     <!-- Login View -->
     <div id="loginView">
-      <div style="font-size: 3rem; margin-bottom: 0.5rem;">🔒</div>
-      <h2>व्यवस्थापक लगइन</h2>
-      <p>यो ड्यासबोर्ड आधिकारिक एडमिनहरूको लागि मात्र सुरक्षित छ। कृपया आफ्नो आधिकारिक Google खाताबाट लगइन गर्नुहोस्।</p>
+      <div style="font-size: 2.5rem; text-align: center; margin-bottom: 0.5rem;">🔒</div>
+      <h2 id="txtLoginTitle">व्यवस्थापक लगइन</h2>
+      <p id="txtLoginDesc">यो ड्यासबोर्ड आधिकारिक एडमिनहरूको लागि मात्र सुरक्षित छ। कृपया आफ्नो आधिकारिक Google वा इमेल खाताबाट लगइन गर्नुहोस्।</p>
+      
       <div id="loginAlert" style="display: none;" class="alert alert-danger"></div>
+      <div id="loginSuccessAlert" style="display: none;" class="alert alert-success"></div>
+
+      <!-- Google Sign-In -->
       <button class="btn-google" id="googleLoginBtn">
         <svg width="20" height="20" viewBox="0 0 48 48">
           <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
@@ -392,8 +503,31 @@
           <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
           <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
         </svg>
-        Google मार्फत लगइन गर्नुहोस्
+        <span id="txtGoogleLogin">Google मार्फत लगइन</span>
       </button>
+
+      <div class="divider"><span id="txtOrDivider">वा इमेल र पासवर्डबाट</span></div>
+
+      <!-- Email / Password Form Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab-btn active" id="tabEmailLogin">लगइन (Sign In)</button>
+        <button class="auth-tab-btn" id="tabEmailRegister">खाता दर्ता (Sign Up)</button>
+      </div>
+
+      <form id="emailAuthForm">
+        <div class="form-group">
+          <label id="lblEmail">इमेल ठेगाना (Email Address) *</label>
+          <input type="email" id="authEmailInput" required placeholder="admin@merosewa.com">
+        </div>
+        <div class="form-group">
+          <label id="lblPassword">पासवर्ड (Password) *</label>
+          <input type="password" id="authPasswordInput" required placeholder="••••••••" minlength="6">
+        </div>
+
+        <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; padding: 0.65rem;" id="emailSubmitBtn">
+          लगइन गर्नुहोस्
+        </button>
+      </form>
     </div>
 
     <!-- Protected Dashboard View -->
@@ -402,27 +536,27 @@
       <!-- Metrics -->
       <div class="stats-grid">
         <div class="stat-card">
-          <div class="stat-title">सक्रिय प्राविधिकहरू</div>
+          <div class="stat-title" id="statTitleProviders">सक्रिय प्राविधिकहरू</div>
           <div class="stat-value" id="activeProvidersCount">0</div>
         </div>
         <div class="stat-card amber">
-          <div class="stat-title">प्रतीक्षारत सेवा अर्डरहरू</div>
+          <div class="stat-title" id="statTitlePending">प्रतीक्षारत सेवा अर्डरहरू</div>
           <div class="stat-value" id="pendingBookingsCount">0</div>
         </div>
         <div class="stat-card blue">
-          <div class="stat-title">स्वीकृत भएका कामहरू</div>
+          <div class="stat-title" id="statTitleAccepted">स्वीकृत भएका कामहरू</div>
           <div class="stat-value" id="acceptedBookingsCount">0</div>
         </div>
         <div class="stat-card green">
-          <div class="stat-title">सम्पन्न सेवाहरू</div>
+          <div class="stat-title" id="statTitleCompleted">सम्पन्न सेवाहरू</div>
           <div class="stat-value" id="completedBookingsCount">0</div>
         </div>
       </div>
 
       <!-- Navigation Tabs -->
       <div class="tabs">
-        <button class="tab-btn active" data-tab="providersTab">सेवा प्रदायक व्यवस्थापन (Providers)</button>
-        <button class="tab-btn" data-tab="bookingsTab">ग्राहक बुकिङहरू (Bookings)</button>
+        <button class="tab-btn active" data-tab="providersTab" id="tabBtnProviders">सेवा प्रदायक व्यवस्थापन (Providers)</button>
+        <button class="tab-btn" data-tab="bookingsTab" id="tabBtnBookings">ग्राहक बुकिङहरू (Bookings)</button>
       </div>
 
       <!-- TAB 1: PROVIDERS MANAGEMENT -->
@@ -453,13 +587,13 @@
           <table>
             <thead>
               <tr>
-                <th>नाम (Name)</th>
-                <th>कोटि (Category)</th>
-                <th>स्थान (City)</th>
-                <th>सम्पर्क (Phone)</th>
-                <th>स्थिति (Status)</th>
-                <th>अनुभव / रेटिङ</th>
-                <th>कार्य (Actions)</th>
+                <th id="thName">नाम (Name)</th>
+                <th id="thCategory">कोटि (Category)</th>
+                <th id="thCity">स्थान (City)</th>
+                <th id="thPhone">सम्पर्क (Phone)</th>
+                <th id="thStatus">स्थिति (Status)</th>
+                <th id="thExp">अनुभव / रेटिङ</th>
+                <th id="thActions">कार्य (Actions)</th>
               </tr>
             </thead>
             <tbody id="providersTableBody">
@@ -494,14 +628,14 @@
           <table>
             <thead>
               <tr>
-                <th>ग्राहक (Customer)</th>
-                <th>सम्पर्क फोन</th>
-                <th>सेवा / प्रदायक</th>
-                <th>ठेगाना (Address)</th>
-                <th>कामको विवरण (Work Details)</th>
-                <th>समय (Preferred Time)</th>
-                <th>स्थिति (Status)</th>
-                <th>अवस्था परिवर्तन</th>
+                <th id="thCustomer">ग्राहक (Customer)</th>
+                <th id="thCustomerPhone">सम्पर्क फोन</th>
+                <th id="thService">सेवा / प्रदायक</th>
+                <th id="thAddress">ठेगाना (Address)</th>
+                <th id="thWorkDesc">कामको विवरण (Work Details)</th>
+                <th id="thTime">समय (Preferred Time)</th>
+                <th id="thBookingStatus">स्थिति (Status)</th>
+                <th id="thBookingActions">अवस्था परिवर्तन</th>
               </tr>
             </thead>
             <tbody id="bookingsTableBody">
@@ -524,12 +658,12 @@
       <form id="providerForm">
         <input type="hidden" id="providerId">
         <div class="form-group">
-          <label>प्राविधिकको नाम (Full Name) *</label>
+          <label id="lblModalName">प्राविधिकको नाम (Full Name) *</label>
           <input type="text" id="provName" required placeholder="उदा: राम बहादुर थापा">
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>सेवा कोटि (Category) *</label>
+            <label id="lblModalCategory">सेवा कोटि (Category) *</label>
             <select id="provCategory" required>
               <option value="electrician">इलेक्ट्रिसियन (Electrician)</option>
               <option value="plumber">प्लम्बर (Plumber)</option>
@@ -537,7 +671,7 @@
             </select>
           </div>
           <div class="form-group">
-            <label>सहर / स्थान (City) *</label>
+            <label id="lblModalCity">सहर / स्थान (City) *</label>
             <select id="provCity" required>
               <option value="Tulsipur">तुलसीपुर (Tulsipur)</option>
               <option value="Ghorahi">घोराही (Ghorahi)</option>
@@ -547,31 +681,31 @@
           </div>
         </div>
         <div class="form-group">
-          <label>सेवा विवरण (Description) *</label>
+          <label id="lblModalDesc">सेवा विवरण (Description) *</label>
           <textarea id="provDesc" rows="3" required placeholder="दक्षता, अनुभव तथा मर्मत गर्ने सामग्रीहरू खुलाउनुहोस्..."></textarea>
         </div>
         <div class="form-group">
-          <label>मोबाइल नम्बर (Phone Number)</label>
+          <label id="lblModalPhone">मोबाइल नम्बर (Phone Number)</label>
           <input type="text" id="provPhone" placeholder="उदा: 9847123456">
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>अनुभव वर्ष (Experience)</label>
+            <label id="lblModalExp">अनुभव वर्ष (Experience)</label>
             <input type="number" id="provExp" value="5" min="0" max="60">
           </div>
           <div class="form-group">
-            <label>रेटिङ (Rating 0-5)</label>
+            <label id="lblModalRating">रेटिङ (Rating 0-5)</label>
             <input type="number" id="provRating" value="4.8" step="0.1" min="0" max="5">
           </div>
         </div>
         <div class="form-group">
           <label class="form-check">
             <input type="checkbox" id="provPhonePublic" checked>
-            फोन नम्बर सार्वजनिक देखाउने (Public Display)
+            <span id="lblModalPhonePublic">फोन नम्बर सार्वजनिक देखाउने (Public Display)</span>
           </label>
           <label class="form-check">
             <input type="checkbox" id="provActive" checked>
-            सक्रिय स्थिति (Active on Marketplace)
+            <span id="lblModalActive">सक्रिय स्थिति (Active on Marketplace)</span>
           </label>
         </div>
         <div class="modal-footer">
@@ -589,6 +723,8 @@
       getAuth, 
       GoogleAuthProvider, 
       signInWithPopup, 
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
       signOut, 
       onAuthStateChanged 
     } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -618,7 +754,7 @@
     const auth = getAuth(app);
     const googleProvider = new GoogleAuthProvider();
 
-    // Use the exact named database ID shared with the Android app
+    // Custom named database ID shared with the Android app
     const DATABASE_ID = "ai-studio-android-merosewa-a6e8bf47-6ac9-4204-80ab-52fe43abc7ce";
     const db = getFirestore(app, DATABASE_ID);
 
@@ -631,6 +767,11 @@
     let allBookings = [];
     let unsubscribeProviders = null;
     let unsubscribeBookings = null;
+    let currentLanguage = localStorage.getItem("mero_admin_lang") || "ne";
+    let isDarkMode = localStorage.getItem("mero_admin_theme") === "dark";
+
+    // Email form mode: "login" or "register"
+    let emailAuthMode = "login";
 
     // DOM Elements
     const loginView = document.getElementById("loginView");
@@ -640,11 +781,212 @@
     const googleLoginBtn = document.getElementById("googleLoginBtn");
     const logoutBtn = document.getElementById("logoutBtn");
     const loginAlert = document.getElementById("loginAlert");
+    const loginSuccessAlert = document.getElementById("loginSuccessAlert");
+    const themeToggleBtn = document.getElementById("themeToggleBtn");
+    const langToggleBtn = document.getElementById("langToggleBtn");
 
-    // UI Listeners
+    // Apply Saved Theme
+    function applyTheme() {
+      if (isDarkMode) {
+        document.body.classList.add("dark-theme");
+        document.getElementById("themeIcon").textContent = "☀️";
+        document.getElementById("themeLabel").textContent = currentLanguage === "ne" ? "लाइट मोड" : "Light Mode";
+      } else {
+        document.body.classList.remove("dark-theme");
+        document.getElementById("themeIcon").textContent = "🌙";
+        document.getElementById("themeLabel").textContent = currentLanguage === "ne" ? "डार्क मोड" : "Dark Mode";
+      }
+    }
+    applyTheme();
+
+    themeToggleBtn.addEventListener("click", () => {
+      isDarkMode = !isDarkMode;
+      localStorage.setItem("mero_admin_theme", isDarkMode ? "dark" : "light");
+      applyTheme();
+    });
+
+    // Language Dictionary
+    const i18n = {
+      ne: {
+        brandSubtitle: "व्यवस्थापक नियन्त्रण कक्ष (Admin Panel)",
+        loginTitle: "व्यवस्थापक लगइन",
+        loginDesc: "यो ड्यासबोर्ड आधिकारिक एडमिनहरूको लागि मात्र सुरक्षित छ। कृपया आफ्नो आधिकारिक Google वा इमेल खाताबाट लगइन गर्नुहोस्।",
+        googleLogin: "Google मार्फत लगइन",
+        orDivider: "वा इमेल र पासवर्डबाट",
+        tabLogin: "लगइन (Sign In)",
+        tabRegister: "नयाँ एडमिन दर्ता (Sign Up)",
+        emailLabel: "इमेल ठेगाना (Email Address) *",
+        passwordLabel: "पासवर्ड (Password) *",
+        btnSubmitLogin: "लगइन गर्नुहोस्",
+        btnSubmitRegister: "नयाँ एडमिन दर्ता गर्नुहोस्",
+        statProviders: "सक्रिय प्राविधिकहरू",
+        statPending: "प्रतीक्षारत सेवा अर्डरहरू",
+        statAccepted: "स्वीकृत भएका कामहरू",
+        statCompleted: "सम्पन्न सेवाहरू",
+        tabProviders: "सेवा प्रदायक व्यवस्थापन (Providers)",
+        tabBookings: "ग्राहक बुकिङहरू (Bookings)",
+        seedBtn: "नमुना प्राविधिक लोड (Seed)",
+        addProviderBtn: "+ नयाँ प्राविधिक थप्नुहोस्",
+        thName: "नाम (Name)",
+        thCategory: "कोटि (Category)",
+        thCity: "स्थान (City)",
+        thPhone: "सम्पर्क (Phone)",
+        thStatus: "स्थिति (Status)",
+        thExp: "अनुभव / रेटिङ",
+        thActions: "कार्य (Actions)",
+        thCustomer: "ग्राहक (Customer)",
+        thCustomerPhone: "सम्पर्क फोन",
+        thService: "सेवा / प्रदायक",
+        thAddress: "ठेगाना (Address)",
+        thWorkDesc: "कामको विवरण (Work Details)",
+        thTime: "समय (Preferred Time)",
+        thBookingStatus: "स्थिति (Status)",
+        thBookingActions: "अवस्था परिवर्तन",
+        logout: "लगआउट"
+      },
+      en: {
+        brandSubtitle: "Administrative Control Panel",
+        loginTitle: "Administrator Sign In",
+        loginDesc: "This panel is strictly restricted to authorized administrators. Sign in with your Google or Admin Email account.",
+        googleLogin: "Continue with Google",
+        orDivider: "or with Email & Password",
+        tabLogin: "Sign In",
+        tabRegister: "Register Admin",
+        emailLabel: "Email Address *",
+        passwordLabel: "Password *",
+        btnSubmitLogin: "Sign In to Dashboard",
+        btnSubmitRegister: "Register as Admin",
+        statProviders: "Active Providers",
+        statPending: "Pending Service Orders",
+        statAccepted: "Accepted Jobs",
+        statCompleted: "Completed Services",
+        tabProviders: "Service Providers",
+        tabBookings: "Customer Bookings",
+        seedBtn: "Load Seed Providers",
+        addProviderBtn: "+ Add New Provider",
+        thName: "Name",
+        thCategory: "Category",
+        thCity: "City",
+        thPhone: "Phone",
+        thStatus: "Status",
+        thExp: "Experience / Rating",
+        thActions: "Actions",
+        thCustomer: "Customer",
+        thCustomerPhone: "Phone",
+        thService: "Service / Provider",
+        thAddress: "Address",
+        thWorkDesc: "Work Description",
+        thTime: "Preferred Time",
+        thBookingStatus: "Status",
+        thBookingActions: "Update Status",
+        logout: "Logout"
+      }
+    };
+
+    function applyLanguage() {
+      const dict = i18n[currentLanguage];
+      document.getElementById("currentLangLabel").textContent = currentLanguage === "ne" ? "English" : "नेपाली";
+      document.getElementById("txtBrandSubtitle").textContent = dict.brandSubtitle;
+      document.getElementById("txtLoginTitle").textContent = dict.loginTitle;
+      document.getElementById("txtLoginDesc").textContent = dict.loginDesc;
+      document.getElementById("txtGoogleLogin").textContent = dict.googleLogin;
+      document.getElementById("txtOrDivider").textContent = dict.orDivider;
+      document.getElementById("tabEmailLogin").textContent = dict.tabLogin;
+      document.getElementById("tabEmailRegister").textContent = dict.tabRegister;
+      document.getElementById("lblEmail").textContent = dict.emailLabel;
+      document.getElementById("lblPassword").textContent = dict.passwordLabel;
+      document.getElementById("emailSubmitBtn").textContent = emailAuthMode === "login" ? dict.btnSubmitLogin : dict.btnSubmitRegister;
+      document.getElementById("statTitleProviders").textContent = dict.statProviders;
+      document.getElementById("statTitlePending").textContent = dict.statPending;
+      document.getElementById("statTitleAccepted").textContent = dict.statAccepted;
+      document.getElementById("statTitleCompleted").textContent = dict.statCompleted;
+      document.getElementById("tabBtnProviders").textContent = dict.tabProviders;
+      document.getElementById("tabBtnBookings").textContent = dict.tabBookings;
+      document.getElementById("seedBtn").textContent = dict.seedBtn;
+      document.getElementById("addProviderBtn").textContent = dict.addProviderBtn;
+      document.getElementById("thName").textContent = dict.thName;
+      document.getElementById("thCategory").textContent = dict.thCategory;
+      document.getElementById("thCity").textContent = dict.thCity;
+      document.getElementById("thPhone").textContent = dict.thPhone;
+      document.getElementById("thStatus").textContent = dict.thStatus;
+      document.getElementById("thExp").textContent = dict.thExp;
+      document.getElementById("thActions").textContent = dict.thActions;
+      document.getElementById("thCustomer").textContent = dict.thCustomer;
+      document.getElementById("thCustomerPhone").textContent = dict.thCustomerPhone;
+      document.getElementById("thService").textContent = dict.thService;
+      document.getElementById("thAddress").textContent = dict.thAddress;
+      document.getElementById("thWorkDesc").textContent = dict.thWorkDesc;
+      document.getElementById("thTime").textContent = dict.thTime;
+      document.getElementById("thBookingStatus").textContent = dict.thBookingStatus;
+      document.getElementById("thBookingActions").textContent = dict.thBookingActions;
+      document.getElementById("logoutBtn").textContent = dict.logout;
+      applyTheme();
+      renderProviders();
+      renderBookings();
+    }
+
+    langToggleBtn.addEventListener("click", () => {
+      currentLanguage = currentLanguage === "ne" ? "en" : "ne";
+      localStorage.setItem("mero_admin_lang", currentLanguage);
+      applyLanguage();
+    });
+
+    // Email Auth Tab Switching
+    const tabEmailLogin = document.getElementById("tabEmailLogin");
+    const tabEmailRegister = document.getElementById("tabEmailRegister");
+    const emailSubmitBtn = document.getElementById("emailSubmitBtn");
+
+    tabEmailLogin.addEventListener("click", (e) => {
+      e.preventDefault();
+      emailAuthMode = "login";
+      tabEmailLogin.classList.add("active");
+      tabEmailRegister.classList.remove("active");
+      emailSubmitBtn.textContent = i18n[currentLanguage].btnSubmitLogin;
+    });
+
+    tabEmailRegister.addEventListener("click", (e) => {
+      e.preventDefault();
+      emailAuthMode = "register";
+      tabEmailRegister.classList.add("active");
+      tabEmailLogin.classList.remove("active");
+      emailSubmitBtn.textContent = i18n[currentLanguage].btnSubmitRegister;
+    });
+
+    // Email / Password Form Submission
+    document.getElementById("emailAuthForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      loginAlert.style.display = "none";
+      loginSuccessAlert.style.display = "none";
+      const email = document.getElementById("authEmailInput").value.trim();
+      const password = document.getElementById("authPasswordInput").value;
+
+      try {
+        if (emailAuthMode === "register") {
+          const userCred = await createUserWithEmailAndPassword(auth, email, password);
+          loginSuccessAlert.textContent = currentLanguage === "ne" ? "खाता सफलतापूर्वक सिर्जना भयो!" : "Account created successfully!";
+          loginSuccessAlert.style.display = "block";
+        } else {
+          await signInWithEmailAndPassword(auth, email, password);
+        }
+      } catch (err) {
+        let msg = err.message || err;
+        if (err.code === "auth/operation-not-allowed") {
+          msg = currentLanguage === "ne"
+            ? "Firebase Console मा 'Email/Password' प्रदायक सक्रिय गरिएको छैन। कृपया Firebase Console > Authentication > Sign-in method मा गई 'Email/Password' इनेबल गर्नुहोस् वा Google लगइन प्रयोग गर्नुहोस्।"
+            : "Email/Password sign-in is not enabled in Firebase Console. Please enable 'Email/Password' under Firebase Console > Authentication > Sign-in method, or sign in with Google.";
+        } else if (err.code === "auth/user-not-found" || err.code === "auth/wrong-password" || err.code === "auth/invalid-credential") {
+          msg = currentLanguage === "ne" ? "इमेल वा पासवर्ड मिलेन।" : "Invalid email or password.";
+        }
+        loginAlert.textContent = msg;
+        loginAlert.style.display = "block";
+      }
+    });
+
+    // Google Sign-In Listener
     googleLoginBtn.addEventListener("click", async () => {
       try {
         loginAlert.style.display = "none";
+        loginSuccessAlert.style.display = "none";
         await signInWithPopup(auth, googleProvider);
       } catch (err) {
         loginAlert.textContent = "लगइन असफल भयो: " + (err.message || err);
@@ -658,11 +1000,9 @@
     onAuthStateChanged(auth, async (user) => {
       currentUser = user;
       if (user) {
-        // Verify Administrator Privileges
         let isAdmin = false;
         if (user.email && user.email.toLowerCase() === OWNER_EMAIL.toLowerCase()) {
           isAdmin = true;
-          // Ensure admin document exists
           try {
             const adminDocRef = doc(db, "admins", user.uid);
             const snap = await getDoc(adminDocRef);
@@ -692,7 +1032,9 @@
           userEmailLabel.textContent = user.email;
           startRealtimeSync();
         } else {
-          loginAlert.textContent = "पहुँच अस्वीकृत! यो खाता (" + user.email + ") लाई व्यवस्थापक अनुमति छैन।";
+          loginAlert.textContent = currentLanguage === "ne"
+            ? "पहुँच अस्वीकृत! यो खाता (" + user.email + ") लाई व्यवस्थापक अनुमति छैन।"
+            : "Access Denied! Account (" + user.email + ") is not authorized as administrator.";
           loginAlert.style.display = "block";
           loginView.style.display = "block";
           dashboardView.style.display = "none";
@@ -709,7 +1051,6 @@
 
     // Real-time Data Listeners
     function startRealtimeSync() {
-      // 1. Providers Real-time Observation
       unsubscribeProviders = onSnapshot(collection(db, "providers"), (snapshot) => {
         allProviders = [];
         snapshot.forEach(docSnap => {
@@ -719,7 +1060,6 @@
         updateMetrics();
       }, (err) => console.error("Providers stream err:", err));
 
-      // 2. Bookings Real-time Observation
       unsubscribeBookings = onSnapshot(collection(db, "bookings"), (snapshot) => {
         allBookings = [];
         snapshot.forEach(docSnap => {
@@ -762,7 +1102,7 @@
       });
 
       if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">कुनै सेवा प्रदायक फेला परेन।</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">${currentLanguage === 'ne' ? 'कुनै सेवा प्रदायक फेला परेन।' : 'No providers found.'}</td></tr>`;
         return;
       }
 
@@ -771,19 +1111,19 @@
           <td><strong>${escapeHtml(p.name)}</strong></td>
           <td>${getCategoryLabel(p.category)}</td>
           <td>${escapeHtml(p.city)}</td>
-          <td>${p.phone ? escapeHtml(p.phone) : '—'} ${p.phonePublic ? '<span class="badge badge-active">सार्वजनिक</span>' : '<span class="badge badge-inactive">गोप्य</span>'}</td>
+          <td>${p.phone ? escapeHtml(p.phone) : '—'} ${p.phonePublic ? `<span class="badge badge-active">${currentLanguage==='ne'?'सार्वजनिक':'Public'}</span>` : `<span class="badge badge-inactive">${currentLanguage==='ne'?'गोप्य':'Private'}</span>`}</td>
           <td>
             <span class="badge ${p.active ? 'badge-active' : 'badge-inactive'}">
-              ${p.active ? 'सक्रिय' : 'निष्क्रिय'}
+              ${p.active ? (currentLanguage==='ne'?'सक्रिय':'Active') : (currentLanguage==='ne'?'निष्क्रिय':'Inactive')}
             </span>
           </td>
-          <td>⭐ ${p.rating || 4.8} (${p.experienceYears || 3} वर्ष)</td>
+          <td>⭐ ${p.rating || 4.8} (${p.experienceYears || 3} ${currentLanguage==='ne'?'वर्ष':'yrs'})</td>
           <td>
-            <button class="btn-outline btn-sm" onclick="editProvider('${p.id}')">सम्पादन</button>
+            <button class="btn-outline btn-sm" onclick="editProvider('${p.id}')">${currentLanguage==='ne'?'सम्पादन':'Edit'}</button>
             <button class="btn-sm ${p.active ? 'btn-danger' : 'btn-accent'}" onclick="toggleProviderActive('${p.id}', ${p.active})">
-              ${p.active ? 'निष्क्रिय बनाउने' : 'सक्रिय बनाउने'}
+              ${p.active ? (currentLanguage==='ne'?'निष्क्रिय बनाउने':'Deactivate') : (currentLanguage==='ne'?'सक्रिय बनाउने':'Activate')}
             </button>
-            <button class="btn-danger btn-sm" onclick="deleteProvider('${p.id}', '${escapeHtml(p.name)}')">मेटाउने</button>
+            <button class="btn-danger btn-sm" onclick="deleteProvider('${p.id}', '${escapeHtml(p.name)}')">${currentLanguage==='ne'?'मेटाउने':'Delete'}</button>
           </td>
         </tr>
       `).join("");
@@ -802,7 +1142,7 @@
       });
 
       if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 2rem;">कुनै सेवा अर्डर फेला परेन।</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 2rem;">${currentLanguage === 'ne' ? 'कुनै सेवा अर्डर फेला परेन।' : 'No bookings found.'}</td></tr>`;
         return;
       }
 
@@ -810,16 +1150,16 @@
         <tr>
           <td><strong>${escapeHtml(b.customerName || '—')}</strong></td>
           <td><a href="tel:${b.customerPhone}" style="color: var(--accent); font-weight: bold; text-decoration: none;">📞 ${escapeHtml(b.customerPhone || '—')}</a></td>
-          <td><strong>${escapeHtml(b.providerName || 'कुनै पनि')}</strong><br><small style="color: var(--text-muted);">${getCategoryLabel(b.category)}</small></td>
+          <td><strong>${escapeHtml(b.providerName || (currentLanguage==='ne'?'कुनै पनि':'Any'))}</strong><br><small style="color: var(--text-muted);">${getCategoryLabel(b.category)}</small></td>
           <td>${escapeHtml(b.city || '')}, ${escapeHtml(b.address || '—')}</td>
           <td style="max-width: 250px;">${escapeHtml(b.description || '—')}</td>
           <td>${escapeHtml(b.preferredDate || '')}<br><small style="color: var(--text-muted);">${escapeHtml(b.preferredTime || '')}</small></td>
           <td>${getStatusBadge(b.status)}</td>
           <td>
             <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
-              ${b.status === 'pending' ? `<button class="btn-primary btn-sm" onclick="updateBookingStatus('${b.id}', 'accepted')">स्वीकार</button>` : ''}
-              ${b.status === 'accepted' ? `<button class="btn-accent btn-sm" onclick="updateBookingStatus('${b.id}', 'completed')">सम्पन्न</button>` : ''}
-              ${b.status !== 'cancelled' && b.status !== 'completed' ? `<button class="btn-danger btn-sm" onclick="updateBookingStatus('${b.id}', 'cancelled')">रद्द</button>` : ''}
+              ${b.status === 'pending' ? `<button class="btn-primary btn-sm" onclick="updateBookingStatus('${b.id}', 'accepted')">${currentLanguage==='ne'?'स्वीकार':'Accept'}</button>` : ''}
+              ${b.status === 'accepted' ? `<button class="btn-accent btn-sm" onclick="updateBookingStatus('${b.id}', 'completed')">${currentLanguage==='ne'?'सम्पन्न':'Complete'}</button>` : ''}
+              ${b.status !== 'cancelled' && b.status !== 'completed' ? `<button class="btn-danger btn-sm" onclick="updateBookingStatus('${b.id}', 'cancelled')">${currentLanguage==='ne'?'रद्द':'Cancel'}</button>` : ''}
             </div>
           </td>
         </tr>
@@ -827,19 +1167,21 @@
     }
 
     function getCategoryLabel(cat) {
+      const isNe = currentLanguage === 'ne';
       switch((cat||'').toLowerCase()) {
-        case 'electrician': return '⚡ इलेक्ट्रिसियन';
-        case 'plumber': return '🚰 प्लम्बर';
-        default: return '🛠️ अन्य मर्मत';
+        case 'electrician': return isNe ? '⚡ इलेक्ट्रिसियन' : '⚡ Electrician';
+        case 'plumber': return isNe ? '🚰 प्लम्बर' : '🚰 Plumber';
+        default: return isNe ? '🛠️ अन्य मर्मत' : '🛠️ Other Repairs';
       }
     }
 
     function getStatusBadge(status) {
+      const isNe = currentLanguage === 'ne';
       switch((status||'').toLowerCase()) {
-        case 'accepted': return '<span class="badge badge-accepted">स्वीकृत</span>';
-        case 'completed': return '<span class="badge badge-completed">सम्पन्न</span>';
-        case 'cancelled': return '<span class="badge badge-cancelled">रद्द</span>';
-        default: return '<span class="badge badge-pending">प्रतीक्षारत</span>';
+        case 'accepted': return `<span class="badge badge-accepted">${isNe ? 'स्वीकृत' : 'Accepted'}</span>`;
+        case 'completed': return `<span class="badge badge-completed">${isNe ? 'सम्पन्न' : 'Completed'}</span>`;
+        case 'cancelled': return `<span class="badge badge-cancelled">${isNe ? 'रद्द' : 'Cancelled'}</span>`;
+        default: return `<span class="badge badge-pending">${isNe ? 'प्रतीक्षारत' : 'Pending'}</span>`;
       }
     }
 
@@ -848,7 +1190,6 @@
       return String(str).replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[m]);
     }
 
-    // Status Filters Change
     document.getElementById("providerCityFilter").addEventListener("change", renderProviders);
     document.getElementById("providerCategoryFilter").addEventListener("change", renderProviders);
     document.getElementById("bookingStatusFilter").addEventListener("change", renderBookings);
@@ -869,7 +1210,7 @@
     const providerForm = document.getElementById("providerForm");
     
     document.getElementById("addProviderBtn").addEventListener("click", () => {
-      document.getElementById("modalTitle").textContent = "नयाँ प्राविधिक थप्नुहोस्";
+      document.getElementById("modalTitle").textContent = currentLanguage === 'ne' ? "नयाँ प्राविधिक थप्नुहोस्" : "Add New Provider";
       providerForm.reset();
       document.getElementById("providerId").value = "";
       document.getElementById("provPhonePublic").checked = true;
@@ -883,7 +1224,7 @@
     window.editProvider = function(id) {
       const p = allProviders.find(item => item.id === id);
       if (!p) return;
-      document.getElementById("modalTitle").textContent = "प्राविधिक विवरण सम्पादन";
+      document.getElementById("modalTitle").textContent = currentLanguage === 'ne' ? "प्राविधिक विवरण सम्पादन" : "Edit Provider Details";
       document.getElementById("providerId").value = p.id;
       document.getElementById("provName").value = p.name || '';
       document.getElementById("provCategory").value = p.category || 'electrician';
@@ -922,11 +1263,10 @@
         }
         providerModal.classList.remove("open");
       } catch (err) {
-        alert("सेभ गर्न सकिएन: " + err.message);
+        alert("Error: " + err.message);
       }
     });
 
-    // Toggle Active Status
     window.toggleProviderActive = async function(id, currentActive) {
       try {
         await updateDoc(doc(db, "providers", id), {
@@ -934,21 +1274,22 @@
           updatedAt: serverTimestamp()
         });
       } catch (err) {
-        alert("त्रुटि: " + err.message);
+        alert("Error: " + err.message);
       }
     };
 
-    // Delete Provider
     window.deleteProvider = async function(id, name) {
-      if (!confirm(`के तपाईं निश्चित हुनुहुन्छ? प्राविधिक "${name}" लाई मेटाउँदा ब्याकइन्डबाट सधैंका लागि हट्नेछ।`)) return;
+      const confirmMsg = currentLanguage === 'ne'
+        ? `के तपाईं निश्चित हुनुहुन्छ? प्राविधिक "${name}" लाई मेटाउँदा ब्याकइन्डबाट सधैंका लागि हट्नेछ।`
+        : `Are you sure you want to delete provider "${name}" permanently?`;
+      if (!confirm(confirmMsg)) return;
       try {
         await deleteDoc(doc(db, "providers", id));
       } catch (err) {
-        alert("मेटाउन सकिएन: " + err.message);
+        alert("Error: " + err.message);
       }
     };
 
-    // Update Booking Status
     window.updateBookingStatus = async function(bookingId, newStatus) {
       try {
         await updateDoc(doc(db, "bookings", bookingId), {
@@ -956,13 +1297,13 @@
           updatedAt: serverTimestamp()
         });
       } catch (err) {
-        alert("बुकिङ स्थिति परिवर्तन गर्न सकिएन: " + err.message);
+        alert("Error: " + err.message);
       }
     };
 
-    // Data Seeding Shortcut
+    // Data Seeding
     document.getElementById("seedBtn").addEventListener("click", async () => {
-      if (allProviders.length > 0 && !confirm("डेटाबेसमा पहिले नै प्राविधिकहरू छन्। के तपाईं फेरि नमुना प्राविधिकहरू थप्न चाहनुहुन्छ?")) return;
+      if (allProviders.length > 0 && !confirm(currentLanguage === 'ne' ? "डेटाबेसमा पहिले नै प्राविधिकहरू छन्। के तपाईं फेरि नमुना प्राविधिकहरू थप्न चाहनुहुन्छ?" : "Database already has providers. Do you want to load seed providers?")) return;
       
       const seedData = [
         { name: "राम बहादुर थापा (Ram B. Thapa)", category: "electrician", city: "Tulsipur", description: "घर तथा पसलको वायरिङ, इन्भर्टर जडान र बिजुली मर्मतमा १० वर्षको अनुभव।", phone: "9847812345", phonePublic: true, active: true, rating: 4.9, experienceYears: 10 },
@@ -979,11 +1320,14 @@
           item.updatedAt = serverTimestamp();
           await setDoc(doc(collection(db, "providers")), item);
         }
-        alert("नमुना प्राविधिकहरू सफलतापूर्वक लोड भए!");
+        alert(currentLanguage === 'ne' ? "नमुना प्राविधिकहरू सफलतापूर्वक लोड भए!" : "Seed providers loaded successfully!");
       } catch (err) {
-        alert("त्रुटि: " + err.message);
+        alert("Error: " + err.message);
       }
     });
+
+    // Initialize Language Display
+    applyLanguage();
   </script>
 </body>
 </html>

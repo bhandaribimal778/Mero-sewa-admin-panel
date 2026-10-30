@@ -3,1345 +3,366 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>मेरो सेवा नेपाल — व्यवस्थापक ड्यासबोर्ड (Admin Panel)</title>
+  <title>मेरो सेवा नेपाल - व्यवस्थापक नियन्त्रण कक्ष (Admin Panel)</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --primary: #0F3D78;
-      --primary-dark: #0A2540;
-      --primary-light: #2563EB;
-      --primary-subtle: #EFF6FF;
-      --accent: #059669;
-      --accent-light: #10B981;
-      --accent-subtle: #ECFDF5;
-      --warning: #D97706;
-      --warning-subtle: #FEF3C7;
-      --danger: #DC2626;
-      --danger-subtle: #FEE2E2;
-      --purple: #7C3AED;
-      --purple-subtle: #F3E8FF;
-      --bg: #F8FAFC;
-      --card-bg: #FFFFFF;
-      --text-main: #0F172A;
-      --text-muted: #64748B;
-      --border: #E2E8F0;
-      --table-header-bg: #F1F5F9;
-      --table-hover: #F8FAFC;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
-      --shadow-md: 0 4px 12px rgba(15,23,42,0.08);
-      --shadow-lg: 0 12px 28px rgba(15,23,42,0.14);
+  <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              600: '#1e3a8a',
+              700: '#172554',
+              800: '#0f172a',
+              900: '#0a0f1d',
+              accent: '#059669',
+              gold: '#d97706',
+              purple: '#7c3aed'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Mukta', 'sans-serif'],
+            nepali: ['Mukta', 'sans-serif']
+          }
+        }
+      }
     }
+  </script>
 
-    body.dark-theme {
-      --primary: #3B82F6;
-      --primary-dark: #1E3A8A;
-      --primary-light: #60A5FA;
-      --primary-subtle: #1E293B;
-      --accent: #10B981;
-      --accent-light: #34D399;
-      --accent-subtle: #064E3B;
-      --warning: #F59E0B;
-      --warning-subtle: #78350F;
-      --danger: #EF4444;
-      --danger-subtle: #7F1D1D;
-      --purple: #A78BFA;
-      --purple-subtle: #4C1D95;
-      --bg: #0B1120;
-      --card-bg: #1E293B;
-      --text-main: #F1F5F9;
-      --text-muted: #94A3B8;
-      --border: #334155;
-      --table-header-bg: #0F172A;
-      --table-hover: #162032;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
-      --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
-      --shadow-lg: 0 12px 28px rgba(0,0,0,0.5);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: 'Mukta', 'Plus Jakarta Sans', sans-serif;
-      transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-    }
-
-    body {
-      background-color: var(--bg);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* Announcement Banner */
-    #announcementBanner {
-      display: none;
-      background: linear-gradient(90deg, #1E40AF, #3730A3);
-      color: #FFFFFF;
-      padding: 0.6rem 1rem;
-      font-size: 0.9rem;
-      font-weight: 600;
-      text-align: center;
-      position: relative;
-    }
-
-    /* Top Navigation Header */
-    header {
-      background: linear-gradient(135deg, #0F3D78, #0A2540);
-      color: white;
-      padding: 0.9rem 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 4px 14px rgba(15, 61, 120, 0.18);
-      flex-wrap: wrap;
-      gap: 1rem;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 0.85rem;
-      cursor: pointer;
-    }
-
-    .brand-icon {
-      background: rgba(255, 255, 255, 0.15);
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.6rem;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    }
-
-    .brand h1 {
-      font-size: 1.35rem;
-      font-weight: 800;
-      line-height: 1.2;
-      letter-spacing: -0.01em;
-    }
-
-    .brand span {
-      font-size: 0.8rem;
-      opacity: 0.88;
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-    }
-
-    .control-pill {
-      background: rgba(255, 255, 255, 0.14);
-      border: 1px solid rgba(255, 255, 255, 0.22);
-      color: white;
-      padding: 0.45rem 0.85rem;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      position: relative;
-    }
-    .control-pill:hover {
-      background: rgba(255, 255, 255, 0.25);
-    }
-
-    .notif-badge {
-      background: var(--danger);
-      color: white;
-      border-radius: 999px;
-      padding: 0.1rem 0.4rem;
-      font-size: 0.7rem;
-      font-weight: 800;
-      position: absolute;
-      top: -4px;
-      right: -4px;
-      display: none;
-    }
-
-    .user-pill {
-      background: rgba(255, 255, 255, 0.16);
-      padding: 0.4rem 0.9rem;
-      border-radius: 9999px;
-      font-size: 0.85rem;
-      color: white;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    button {
-      cursor: pointer;
-      border: none;
-      font-weight: 600;
-      border-radius: 8px;
-      padding: 0.5rem 1rem;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.45rem;
-      font-size: 0.92rem;
-      transition: transform 0.1s ease, background 0.15s ease;
-    }
-    button:active { transform: scale(0.98); }
-
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-primary:hover { opacity: 0.93; }
-    .btn-accent { background: var(--accent); color: white; }
-    .btn-accent:hover { opacity: 0.93; }
-    .btn-danger { background: var(--danger); color: white; }
-    .btn-danger:hover { opacity: 0.93; }
-    .btn-warning { background: var(--warning); color: white; }
-    .btn-warning:hover { opacity: 0.93; }
-    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
-    .btn-outline:hover { background: var(--table-header-bg); }
-    .btn-sm { padding: 0.3rem 0.65rem; font-size: 0.82rem; border-radius: 6px; }
-
-    main {
-      flex: 1;
-      max-width: 1360px;
-      width: 100%;
-      margin: 1.5rem auto;
-      padding: 0 1.25rem 3rem 1.25rem;
-    }
-
-    /* Auth Box */
-    #loginView {
-      max-width: 480px;
-      margin: 3.5rem auto;
-      background: var(--card-bg);
-      padding: 2.25rem 2rem;
-      border-radius: 20px;
-      box-shadow: var(--shadow-lg);
-      border: 1px solid var(--border);
-      position: relative;
-    }
-
-    .auth-badge-top {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      background: var(--primary-subtle);
-      color: var(--primary);
-      padding: 0.3rem 0.85rem;
-      border-radius: 999px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-    }
-
-    #loginView h2 { color: var(--primary); font-size: 1.65rem; margin-bottom: 0.4rem; font-weight: 800; }
-    #loginView p { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem; line-height: 1.5; }
-
-    .auth-tabs {
-      display: flex;
-      margin-bottom: 1.35rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .auth-tab-btn {
-      flex: 1;
-      background: none;
-      border: none;
-      border-bottom: 3px solid transparent;
-      padding: 0.6rem 0.5rem;
-      font-size: 0.92rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      border-radius: 0;
-      justify-content: center;
-    }
-    .auth-tab-btn.active {
-      color: var(--primary);
-      border-bottom-color: var(--primary);
-    }
-
-    .password-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-    }
-    .password-wrapper input {
-      width: 100%;
-      padding-right: 2.5rem;
-    }
-    .toggle-pwd-btn {
-      position: absolute;
-      right: 0.6rem;
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      padding: 0.2rem;
-      font-size: 1.1rem;
-    }
-
-    .form-extras {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 0.5rem;
-      margin-bottom: 1.25rem;
-      font-size: 0.88rem;
-    }
-    .forgot-link {
-      color: var(--primary-light);
-      text-decoration: none;
-      font-weight: 700;
-      cursor: pointer;
-    }
-    .forgot-link:hover { text-decoration: underline; }
-
-    /* Stats Grid */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .stat-card {
-      background: var(--card-bg);
-      padding: 1.25rem;
-      border-radius: 14px;
-      box-shadow: var(--shadow-sm);
-      border: 1px solid var(--border);
-      border-left: 5px solid var(--primary);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    .stat-card.green { border-left-color: var(--accent); }
-    .stat-card.amber { border-left-color: var(--warning); }
-    .stat-card.purple { border-left-color: var(--purple); }
-    .stat-card.blue { border-left-color: var(--primary-light); }
-
-    .stat-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .stat-title {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-    }
-    .stat-icon {
-      font-size: 1.35rem;
-      opacity: 0.8;
-    }
-    .stat-value {
-      font-size: 1.95rem;
-      font-weight: 800;
-      color: var(--text-main);
-      margin-top: 0.5rem;
-    }
-
-    /* Tabs */
-    .tabs-wrapper {
-      border-bottom: 2px solid var(--border);
-      margin-bottom: 1.5rem;
-      overflow-x: auto;
-      white-space: nowrap;
-    }
-    .tabs {
-      display: flex;
-      gap: 0.5rem;
-    }
-
-    .tab-btn {
-      padding: 0.75rem 1.25rem;
-      background: none;
-      border: none;
-      border-bottom: 3px solid transparent;
-      border-radius: 0;
-      font-weight: 700;
-      color: var(--text-muted);
-      font-size: 0.98rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-    }
-
-    .tab-btn.active {
-      color: var(--primary);
-      border-bottom-color: var(--primary);
-    }
-
-    /* Toolbar */
-    .toolbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-      background: var(--card-bg);
-      padding: 1rem 1.25rem;
-      border-radius: 14px;
-      margin-bottom: 1.25rem;
-      box-shadow: var(--shadow-sm);
-      border: 1px solid var(--border);
-    }
-
-    .toolbar-left, .toolbar-right {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-    }
-
-    select, input[type="text"], input[type="email"], input[type="password"], input[type="number"], textarea {
-      padding: 0.55rem 0.85rem;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 0.92rem;
-      background: var(--card-bg);
-      color: var(--text-main);
-      outline: none;
-    }
-
-    select:focus, input:focus, textarea:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
-    }
-
-    /* Table */
-    .table-container {
-      background: var(--card-bg);
-      border-radius: 14px;
-      box-shadow: var(--shadow-sm);
-      border: 1px solid var(--border);
-      overflow-x: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-    }
-
-    th {
-      background: var(--table-header-bg);
-      color: var(--text-muted);
-      padding: 0.85rem 1rem;
-      font-weight: 700;
-      font-size: 0.82rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      border-bottom: 1px solid var(--border);
-      white-space: nowrap;
-    }
-
-    td {
-      padding: 0.9rem 1rem;
-      border-bottom: 1px solid var(--border);
-      vertical-align: middle;
-      font-size: 0.92rem;
-    }
-
-    tr:hover { background: var(--table-hover); }
-
-    /* Badges */
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      padding: 0.22rem 0.65rem;
-      border-radius: 999px;
-      font-size: 0.76rem;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-    .badge-pending { background: var(--warning-subtle); color: var(--warning); }
-    .badge-accepted { background: var(--primary-subtle); color: var(--primary); }
-    .badge-in_progress { background: var(--purple-subtle); color: var(--purple); }
-    .badge-completed { background: var(--accent-subtle); color: var(--accent); }
-    .badge-cancelled { background: var(--danger-subtle); color: var(--danger); }
-    .badge-active { background: var(--accent-subtle); color: var(--accent); }
-    .badge-inactive { background: var(--border); color: var(--text-muted); }
-
-    /* Modal Backdrop */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.72);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-      padding: 1rem;
-      backdrop-filter: blur(2px);
-    }
-
-    .modal-backdrop.open { display: flex; }
-
-    .modal {
-      background: var(--card-bg);
-      color: var(--text-main);
-      border-radius: 18px;
-      max-width: 540px;
-      width: 100%;
-      max-height: 90vh;
-      overflow-y: auto;
-      padding: 1.75rem;
-      box-shadow: var(--shadow-lg);
-      border: 1px solid var(--border);
-    }
-    .modal.modal-lg { max-width: 700px; }
-
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.35rem;
-    }
-
-    .modal-header h3 {
-      font-size: 1.35rem;
-      color: var(--primary);
-      font-weight: 800;
-    }
-
-    .form-group { margin-bottom: 1rem; }
-    .form-group label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 700;
-      margin-bottom: 0.35rem;
-      color: var(--text-main);
-    }
-    .form-group input, .form-group select, .form-group textarea { width: 100%; }
-    .form-row { display: flex; gap: 0.85rem; }
-    .form-row .form-group { flex: 1; }
-    .form-check {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.9rem;
-      margin-top: 0.35rem;
-    }
-    .form-check input { width: auto; }
-    .modal-footer {
-      display: flex;
-      justify-content: flex-end;
-      gap: 0.75rem;
-      margin-top: 1.5rem;
-      border-top: 1px solid var(--border);
-      padding-top: 1rem;
-    }
-
-    .alert {
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-      font-size: 0.9rem;
-      display: none;
-      line-height: 1.45;
-    }
-    .alert-danger { background: var(--danger-subtle); color: var(--danger); border: 1px solid rgba(220,38,38,0.25); }
-    .alert-success { background: var(--accent-subtle); color: var(--accent); border: 1px solid rgba(5,150,105,0.25); }
-    .alert-info { background: var(--primary-subtle); color: var(--primary); border: 1px solid rgba(37,99,235,0.25); }
-
-    /* Category Cards Grid */
-    .category-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-    }
-    .category-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.25rem;
-      box-shadow: var(--shadow-sm);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 0.85rem;
-    }
-    .category-header {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-    .category-icon {
-      font-size: 2rem;
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      background: var(--primary-subtle);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .category-names h4 { font-size: 1.05rem; font-weight: 800; color: var(--text-main); }
-    .category-names span { font-size: 0.8rem; color: var(--text-muted); }
-    .category-actions {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-top: 1px solid var(--border);
-      padding-top: 0.75rem;
-    }
-
-    /* Notification Panel Dropdown */
-    #notifPanel {
-      display: none;
-      position: absolute;
-      top: 60px;
-      right: 20px;
-      width: 360px;
-      max-width: 90vw;
-      background: var(--card-bg);
-      color: var(--text-main);
-      border-radius: 16px;
-      box-shadow: var(--shadow-lg);
-      border: 1px solid var(--border);
-      z-index: 1000;
-      overflow: hidden;
-    }
-    #notifPanel.open { display: block; }
-    .notif-header {
-      padding: 0.85rem 1rem;
-      background: var(--table-header-bg);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid var(--border);
-      font-weight: 700;
-      font-size: 0.9rem;
-    }
-    .notif-list {
-      max-height: 380px;
-      overflow-y: auto;
-    }
-    .notif-item {
-      padding: 0.8rem 1rem;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.86rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-      cursor: pointer;
-    }
-    .notif-item:hover { background: var(--table-hover); }
-    .notif-item.unread { background: var(--primary-subtle); }
-    .notif-time { font-size: 0.75rem; color: var(--text-muted); }
-
-    /* Floating Toast */
-    #toastContainer {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      z-index: 10000;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-      pointer-events: none;
-    }
-    .toast {
-      background: var(--primary-dark);
-      color: white;
-      padding: 0.85rem 1.25rem;
-      border-radius: 12px;
-      box-shadow: var(--shadow-lg);
-      font-size: 0.9rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-      border-left: 5px solid var(--accent-light);
-      pointer-events: auto;
-      animation: slideIn 0.3s ease;
-    }
-    @keyframes slideIn {
-      from { transform: translateX(100%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-
-    /* Settings Tab Grid */
-    .settings-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.5rem;
-    }
-    .settings-card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 1.5rem;
-      box-shadow: var(--shadow-sm);
-    }
-    .settings-card h3 {
-      font-size: 1.15rem;
-      font-weight: 800;
-      margin-bottom: 0.5rem;
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .settings-card p {
-      color: var(--text-muted);
-      font-size: 0.88rem;
-      margin-bottom: 1.25rem;
-    }
-
-    /* Print styles */
-    @media print {
-      header, .toolbar, .tabs-wrapper, .modal-backdrop, #notifPanel { display: none !important; }
-      body { background: white; color: black; }
-      .table-container { box-shadow: none; border: 1px solid #ccc; }
-    }
-  </style>
+  <!-- Firebase Compat SDKs for robust standalone execution -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-800 antialiased h-screen flex flex-col md:flex-row overflow-hidden">
 
-  <!-- Top Announcement Banner -->
-  <div id="announcementBanner">
-    <span id="announcementText">विशेष सूचना: तुलसीपुर तथा दाङ क्षेत्रभर सेवा द्रुत गतिमा उपलब्ध छ!</span>
-  </div>
-
-  <!-- Header -->
-  <header>
-    <div class="brand" onclick="location.reload()">
-      <div class="brand-icon">🇳🇵</div>
-      <div>
-        <h1 id="txtBrandTitle">मेरो सेवा नेपाल</h1>
-        <span id="txtBrandSubtitle">व्यवस्थापक नियन्त्रण कक्ष (Admin Panel)</span>
+  <!-- ================= AUTH OVERLAY ================= -->
+  <div id="authOverlay" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/80 backdrop-blur-sm p-4 hidden">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl border border-slate-100 p-8 text-center relative overflow-hidden">
+      <div class="w-16 h-16 bg-blue-50 text-brand-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl shadow-inner">
+        <i class="fa-solid fa-shield-halved"></i>
       </div>
-    </div>
+      <h2 class="text-2xl font-bold text-slate-900 font-nepali">व्यवस्थापक नियन्त्रण कक्ष</h2>
+      <p class="text-sm text-slate-500 mt-1 mb-6">Mero Sewa Nepal • Cloud Admin Dashboard</p>
+      
+      <div id="authErrorMessage" class="hidden mb-4 p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-xl text-left"></div>
 
-    <div class="header-actions">
-      <!-- Notification Bell -->
-      <button class="control-pill" id="notifBellBtn" title="सूचनाहरू (Notifications)">
-        🔔 <span id="lblNotif">सूचना</span>
-        <span class="notif-badge" id="notifBadge">0</span>
-      </button>
-
-      <!-- Language Toggle -->
-      <button class="control-pill" id="langToggleBtn" title="Language">
-        🌐 <span id="currentLangLabel">English</span>
-      </button>
-
-      <!-- Dark Mode Toggle -->
-      <button class="control-pill" id="themeToggleBtn" title="Theme">
-        <span id="themeIcon">🌙</span> <span id="themeLabel">डार्क मोड</span>
-      </button>
-
-      <!-- Authenticated User Menu -->
-      <div class="auth-bar" id="authHeader" style="display: none;">
-        <div class="user-pill">
-          <span>🛡️</span>
-          <span id="userEmailLabel" style="font-weight: 700;">admin@merosewa.com</span>
-        </div>
-        <button class="btn-danger btn-sm" id="logoutBtn">लगआउट</button>
-      </div>
-    </div>
-  </header>
-
-  <!-- Notification Dropdown Panel -->
-  <div id="notifPanel">
-    <div class="notif-header">
-      <span id="txtNotifTitle">🔔 नयाँ बुकिङ तथा सूचनाहरू</span>
-      <button class="btn-outline btn-sm" id="clearNotifsBtn" style="padding: 0.15rem 0.5rem; font-size: 0.75rem;">सबै मेट्नुहोस्</button>
-    </div>
-    <div class="notif-list" id="notifList">
-      <div style="padding: 1.5rem; text-align: center; color: var(--text-muted); font-size: 0.85rem;" id="txtNoNotif">
-        कुनै नयाँ सूचना छैन।
-      </div>
-    </div>
-  </div>
-
-  <!-- Main Container -->
-  <main>
-    <!-- ALERT MESSAGES -->
-    <div class="alert alert-danger" id="globalAlert"></div>
-    <div class="alert alert-success" id="globalSuccess"></div>
-
-    <!-- 1. LOGIN / FIRST-TIME REGISTER VIEW -->
-    <div id="loginView">
-      <div class="auth-badge-top" id="authModeBadge">
-        <span>🔒</span> <span id="txtAuthBadge">सुरक्षित एडमिन पहुँच</span>
-      </div>
-      <h2 id="txtLoginTitle">व्यवस्थापक लगइन</h2>
-      <p id="txtLoginDesc">यो ड्यासबोर्ड आधिकारिक व्यवस्थापकका लागि मात्र सुरक्षित छ। इमेल र पासवर्ड प्रयोग गरी लगइन गर्नुहोस्।</p>
-
-      <div class="alert alert-danger" id="loginAlert"></div>
-      <div class="alert alert-success" id="loginSuccessAlert"></div>
-
-      <!-- Auth Tab (Only visible if Admin is NOT registered yet) -->
-      <div class="auth-tabs" id="authTabsContainer" style="display: none;">
-        <button class="auth-tab-btn active" id="tabEmailLogin">लगइन (Sign In)</button>
-        <button class="auth-tab-btn" id="tabEmailRegister">पहिलो पटक दर्ता (One-Time Setup)</button>
-      </div>
-
-      <!-- One-time Setup Banner if not initialized -->
-      <div class="alert alert-info" id="initialSetupNotice" style="display: none;">
-        <strong>👋 स्वागत छ!</strong> प्रणालीमा अहिलेसम्म कुनै व्यवस्थापक दर्ता भएको छैन। कृपया पहिलो पटक व्यवस्थापक खाता सिर्जना गर्नुहोस्। यो दर्ता <b>एक पटक मात्र</b> गर्न सकिनेछ।
-      </div>
-
-      <!-- Registration Locked Notice -->
-      <div class="alert alert-info" id="regLockedNotice" style="display: none;">
-        🔒 व्यवस्थापक खाता पहिले नै सिर्जना भइसकेको छ। कृपया आफ्नो इमेल र पासवर्ड प्रयोग गरी लगइन गर्नुहोस्।
-      </div>
-
-      <!-- Email / Password Form (STRICTLY EMAIL & PASSWORD ONLY - NO GOOGLE SIGN IN) -->
-      <form id="emailAuthForm">
-        <div class="form-group" id="authNameGroup" style="display: none;">
-          <label id="lblAuthName">व्यवस्थापकको पूरा नाम (Full Name) *</label>
-          <input type="text" id="authNameInput" placeholder="उदा: बिमल भण्डारी (Bimal Bhandari)">
-        </div>
-
-        <div class="form-group">
-          <label id="lblEmail">इमेल ठेगाना (Admin Email) *</label>
-          <input type="email" id="authEmailInput" required placeholder="admin@merosewa.com">
-        </div>
-
-        <div class="form-group">
-          <label id="lblPassword">पासवर्ड (Password) *</label>
-          <div class="password-wrapper">
-            <input type="password" id="authPasswordInput" required placeholder="कमसेकम ६ अक्षर वा अंक">
-            <button type="button" class="toggle-pwd-btn" id="togglePasswordBtn" title="Show/Hide Password">👁️</button>
-          </div>
-        </div>
-
-        <div class="form-group" id="authConfirmGroup" style="display: none;">
-          <label id="lblConfirmPassword">पासवर्ड पुष्टि गर्नुहोस् (Confirm Password) *</label>
-          <input type="password" id="authConfirmPasswordInput" placeholder="माथिको पासवर्ड पुनः टाइप गर्नुहोस्">
-        </div>
-
-        <div class="form-extras">
-          <label class="form-check" style="margin: 0;">
-            <input type="checkbox" id="rememberMeCheck" checked>
-            <span id="lblRememberMe">मलाई सम्झनुहोस्</span>
-          </label>
-          <a class="forgot-link" id="forgotPasswordLink">पासवर्ड बिर्सनुभयो? (Forgot?)</a>
-        </div>
-
-        <button type="submit" class="btn-primary" id="emailSubmitBtn" style="width: 100%; padding: 0.75rem; border-radius: 10px; font-size: 1rem; font-weight: 700;">
-          लगइन गर्नुहोस् (Sign In)
+      <div class="space-y-3">
+        <button id="googleSignInBtn" class="w-full flex items-center justify-center gap-3 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 font-semibold py-3 px-4 rounded-xl transition shadow-sm active:scale-95">
+          <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.8-2.4 3.66v3.04h3.88c2.27-2.09 3.66-5.17 3.66-9.14z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.04c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.24v3.13C3.26 21.39 7.34 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.28c-.25-.72-.38-1.49-.38-2.28s.13-1.56.38-2.28V6.59H1.24C.45 8.16 0 9.97 0 12s.45 3.84 1.24 5.41l4.04-3.13z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.26 2.61 1.24 6.59l4.04 3.13c.95-2.83 3.6-4.97 6.72-4.97z"/></svg>
+          Google खाताबाट लगइन गर्नुहोस्
         </button>
-      </form>
+
+        <form id="emailLoginForm" class="space-y-3 text-left">
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">व्यवस्थापक ईमेल (Admin Email)</label>
+            <input type="email" id="loginEmail" value="bhandaribimal778@gmail.com" required class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-600">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-600 mb-1">पासवर्ड (Password)</label>
+            <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-600">
+          </div>
+          <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold py-3 px-4 rounded-xl transition shadow-md active:scale-95 text-sm">
+            लगइन गर्नुहोस् (Sign In)
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside id="sidebar" class="w-full md:w-64 bg-slate-900 text-slate-300 flex-shrink-0 flex flex-col z-20 transition-all duration-300 md:static fixed inset-y-0 left-0 -translate-x-full md:translate-x-0">
+    <div class="p-5 border-b border-slate-800 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-emerald-500 flex items-center justify-center text-white text-lg font-bold shadow-lg">
+          <i class="fa-solid fa-screwdriver-wrench"></i>
+        </div>
+        <div>
+          <h1 class="font-bold text-white leading-tight font-nepali text-lg">मेरो सेवा नेपाल</h1>
+          <p class="text-xs text-emerald-400 font-medium">व्यवस्थापक प्यानल</p>
+        </div>
+      </div>
+      <button id="closeSidebarBtn" class="md:hidden text-slate-400 hover:text-white p-2">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
     </div>
 
-    <!-- 2. DASHBOARD VIEW (AUTHENTICATED ADMIN) -->
-    <div id="dashboardView" style="display: none;">
+    <!-- Navigation Items -->
+    <nav class="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+      <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition text-white bg-brand-600 shadow-md">
+        <i class="fa-solid fa-chart-pie w-5 text-center text-base"></i>
+        <span>ड्यासबोर्ड (Overview)</span>
+      </button>
 
-      <!-- Metrics / Stats Grid -->
-      <div class="stats-grid">
-        <div class="stat-card blue">
-          <div class="stat-top">
-            <span class="stat-title" id="statTitleProviders">सक्रिय प्राविधिकहरू</span>
-            <span class="stat-icon">👷</span>
-          </div>
-          <div class="stat-value" id="activeProvidersCount">0 / 0</div>
+      <button onclick="switchTab('bookings')" id="nav-bookings" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition text-slate-400 hover:text-white hover:bg-slate-800">
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-calendar-check w-5 text-center text-base"></i>
+          <span>बुकिङहरू (Bookings)</span>
         </div>
-        <div class="stat-card amber">
-          <div class="stat-top">
-            <span class="stat-title" id="statTitlePending">प्रतीक्षारत बुकिङ</span>
-            <span class="stat-icon">⏳</span>
-          </div>
-          <div class="stat-value" id="pendingBookingsCount">0</div>
+        <span id="pendingBadge" class="bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+      </button>
+
+      <button onclick="switchTab('categories')" id="nav-categories" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition text-slate-400 hover:text-white hover:bg-slate-800">
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-layer-group w-5 text-center text-base"></i>
+          <span>क्याटोगोरी व्यवस्थापन</span>
         </div>
-        <div class="stat-card purple">
-          <div class="stat-top">
-            <span class="stat-title" id="statTitleInProgress">काम भइरहेको</span>
-            <span class="stat-icon">⚙️</span>
-          </div>
-          <div class="stat-value" id="inProgressBookingsCount">0</div>
+        <span id="categoryCountBadge" class="bg-slate-800 text-slate-300 text-xs font-semibold px-2 py-0.5 rounded-full">0</span>
+      </button>
+
+      <button onclick="switchTab('providers')" id="nav-providers" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition text-slate-400 hover:text-white hover:bg-slate-800">
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-user-gear w-5 text-center text-base"></i>
+          <span>सेवा प्रदायकहरू</span>
         </div>
-        <div class="stat-card green">
-          <div class="stat-top">
-            <span class="stat-title" id="statTitleCompleted">सम्पन्न सेवाहरू</span>
-            <span class="stat-icon">✅</span>
-          </div>
-          <div class="stat-value" id="completedBookingsCount">0</div>
+        <span id="providerCountBadge" class="bg-slate-800 text-slate-300 text-xs font-semibold px-2 py-0.5 rounded-full">0</span>
+      </button>
+
+      <button onclick="switchTab('users')" id="nav-users" class="nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition text-slate-400 hover:text-white hover:bg-slate-800">
+        <div class="flex items-center gap-3">
+          <i class="fa-solid fa-users w-5 text-center text-base"></i>
+          <span>ग्राहकहरू (Users)</span>
+        </div>
+        <span id="userCountBadge" class="bg-slate-800 text-slate-300 text-xs font-semibold px-2 py-0.5 rounded-full">0</span>
+      </button>
+    </nav>
+
+    <!-- Admin User Info / Sign Out -->
+    <div class="p-4 border-t border-slate-800 bg-slate-950/40 flex items-center justify-between">
+      <div class="flex items-center gap-3 overflow-hidden">
+        <div id="adminAvatar" class="w-9 h-9 rounded-full bg-brand-600 text-white font-bold flex items-center justify-center flex-shrink-0 text-sm">A</div>
+        <div class="overflow-hidden">
+          <p id="adminEmail" class="text-xs font-semibold text-white truncate">bhandaribimal778@gmail.com</p>
+          <span class="inline-flex items-center gap-1 text-[11px] text-emerald-400"><i class="fa-solid fa-circle text-[6px]"></i> अनलाइन (Admin)</span>
+        </div>
+      </div>
+      <button id="signOutBtn" title="लगआउट गर्नुहोस्" class="text-slate-400 hover:text-red-400 p-2 rounded-lg hover:bg-slate-800 transition">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN CONTENT ================= -->
+  <div class="flex-1 flex flex-col h-screen overflow-hidden">
+    <header class="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between flex-shrink-0 z-10 shadow-sm">
+      <div class="flex items-center gap-4">
+        <button id="openSidebarBtn" class="md:hidden text-slate-600 p-2"><i class="fa-solid fa-bars text-xl"></i></button>
+        <div>
+          <h2 id="pageTitle" class="text-lg font-bold text-slate-900 font-nepali">समग्र ड्यासबोर्ड</h2>
+          <p class="text-xs text-slate-500 hidden sm:block">एन्ड्रोइड एप र फायरस्टोर क्लाउड प्रत्यक्ष सिङ्क</p>
         </div>
       </div>
 
-      <!-- Navigation Tabs -->
-      <div class="tabs-wrapper">
-        <div class="tabs">
-          <button class="tab-btn active" data-tab="tabBookings" id="tabBtnBookings">
-            📋 <span id="txtTabBookings">ग्राहक बुकिङहरू (Bookings)</span>
-          </button>
-          <button class="tab-btn" data-tab="tabProviders" id="tabBtnProviders">
-            👷 <span id="txtTabProviders">सेवा प्रदायक व्यवस्थापन (Providers)</span>
-          </button>
-          <button class="tab-btn" data-tab="tabCategories" id="tabBtnCategories">
-            🗂️ <span id="txtTabCategories">सेवा कोटिहरू (Categories)</span>
-          </button>
-          <button class="tab-btn" data-tab="tabSettings" id="tabBtnSettings">
-            ⚙️ <span id="txtTabSettings">प्रणाली सेटिङ्स (Settings)</span>
-          </button>
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2 bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full text-xs font-semibold border border-emerald-200">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>फायरस्टोर प्रत्यक्ष जोडिएको</span>
         </div>
       </div>
+    </header>
 
-      <!-- TAB 1: BOOKINGS MANAGEMENT (FULLY IMPLEMENTED) -->
-      <div class="tab-content" id="tabBookings">
-        <div class="toolbar">
-          <div class="toolbar-left">
-            <select id="bookingStatusFilter">
-              <option value="All">सबै अवस्था (All Status)</option>
-              <option value="pending">प्रतीक्षारत (Pending)</option>
-              <option value="accepted">स्वीकृत (Accepted)</option>
-              <option value="in_progress">काम भइरहेको (In Progress)</option>
-              <option value="completed">सम्पन्न (Completed)</option>
-              <option value="cancelled">रद्द (Cancelled)</option>
-            </select>
-            <select id="bookingCityFilter">
-              <option value="All">सबै सहर (All Cities)</option>
-              <option value="Tulsipur">तुलसीपुर (Tulsipur)</option>
-              <option value="Ghorahi">घोराही (Ghorahi)</option>
-              <option value="Lamahi">लमही (Lamahi)</option>
-              <option value="Bhalubang">भालुवाङ (Bhalubang)</option>
-            </select>
-            <input type="text" id="bookingSearchInput" placeholder="🔍 ग्राहकको नाम वा फोन खोज्नुहोस्...">
+    <main class="flex-1 overflow-y-auto p-4 md:p-6 space-y-6">
+      <!-- 1. DASHBOARD OVERVIEW -->
+      <section id="tab-dashboard" class="tab-content space-y-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">कुल बुकिङहरू</p>
+              <h3 id="statTotalBookings" class="text-2xl font-bold text-slate-900 mt-1">0</h3>
+            </div>
+            <div class="w-12 h-12 bg-blue-50 text-brand-600 rounded-xl flex items-center justify-center text-xl"><i class="fa-solid fa-clipboard-list"></i></div>
           </div>
-          <div class="toolbar-right">
-            <button class="btn-outline btn-sm" id="exportBookingsBtn">📥 CSV निर्यात</button>
-            <button class="btn-outline btn-sm" onclick="window.print()">🖨️ प्रिन्ट गर्नुहोस्</button>
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wider text-amber-600">प्रतीक्षारत (Pending)</p>
+              <h3 id="statPendingBookings" class="text-2xl font-bold text-amber-600 mt-1">0</h3>
+            </div>
+            <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center text-xl"><i class="fa-solid fa-hourglass-half"></i></div>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wider text-purple-600">काम भइरहेको (In Process)</p>
+              <h3 id="statInProcessBookings" class="text-2xl font-bold text-purple-600 mt-1">0</h3>
+            </div>
+            <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center text-xl"><i class="fa-solid fa-person-digging"></i></div>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-wider text-emerald-600">सम्पन्न (Completed)</p>
+              <h3 id="statCompletedBookings" class="text-2xl font-bold text-emerald-600 mt-1">0</h3>
+            </div>
+            <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl"><i class="fa-solid fa-circle-check"></i></div>
           </div>
         </div>
 
-        <div class="table-container">
-          <table>
-            <thead>
+        <!-- Recent Table -->
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+          <div class="p-5 border-b border-slate-100 flex items-center justify-between">
+            <h3 class="font-bold text-slate-900 font-nepali">पछिल्ला सेवा बुकिङहरू र बुकिङ समय</h3>
+            <button onclick="switchTab('bookings')" class="text-brand-600 text-xs font-bold">सबै हेर्नुहोस् →</button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 text-slate-500 uppercase text-[11px] border-b border-slate-100">
+                <tr>
+                  <th class="py-3 px-4">ग्राहक</th>
+                  <th class="py-3 px-4">सेवा</th>
+                  <th class="py-3 px-4">बुकिङ गरिएको समय (Booking Time)</th>
+                  <th class="py-3 px-4">भेट्ने स्लट</th>
+                  <th class="py-3 px-4">स्थिति</th>
+                </tr>
+              </thead>
+              <tbody id="recentBookingsTbody" class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. BOOKINGS MANAGEMENT -->
+      <section id="tab-bookings" class="tab-content space-y-4 hidden">
+        <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-col sm:flex-row gap-3 items-center justify-between">
+          <div class="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto">
+            <button onclick="filterBookings('all')" id="bfilter-all" class="booking-filter px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-900 text-white">सबै</button>
+            <button onclick="filterBookings('pending')" id="bfilter-pending" class="booking-filter px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 text-slate-700">प्रतीक्षारत</button>
+            <button onclick="filterBookings('accepted')" id="bfilter-accepted" class="booking-filter px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 text-slate-700">स्वीकृत</button>
+            <button onclick="filterBookings('in_process')" id="bfilter-in_process" class="booking-filter px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 text-slate-700">काम भइरहेको छ</button>
+            <button onclick="filterBookings('completed')" id="bfilter-completed" class="booking-filter px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 text-slate-700">सम्पन्न</button>
+            <button onclick="filterBookings('cancelled')" id="bfilter-cancelled" class="booking-filter px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 text-slate-700">रद्द</button>
+          </div>
+          <input type="text" id="bookingSearchInput" oninput="renderBookingsTable()" placeholder="ग्राहक वा फोन खोज्नुहोस्..." class="text-xs px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl w-full sm:w-64">
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 text-slate-500 uppercase text-[11px] border-b border-slate-100">
+                <tr>
+                  <th class="py-3.5 px-4">ग्राहक</th>
+                  <th class="py-3.5 px-4">सेवा र विवरण</th>
+                  <th class="py-3.5 px-4 text-brand-600 font-bold">बुकिङ गरिएको समय</th>
+                  <th class="py-3.5 px-4">भेट्ने स्लट</th>
+                  <th class="py-3.5 px-4">स्थिति</th>
+                  <th class="py-3.5 px-4 text-center">कार्य (Update)</th>
+                </tr>
+              </thead>
+              <tbody id="bookingsFullTbody" class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. CATEGORIES MANAGEMENT -->
+      <section id="tab-categories" class="tab-content space-y-4 hidden">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+          <div>
+            <h3 class="font-bold text-slate-900 font-nepali text-lg">एप क्याटोगोरी व्यवस्थापन</h3>
+            <p class="text-xs text-slate-500">यहाँ थपिएका वा हटाइएका क्याटोगोरीहरू सिधै एपमा परिवर्तन हुन्छन्।</p>
+          </div>
+          <div class="flex gap-2">
+            <button onclick="seedDefaultCategories()" class="px-3.5 py-2 border rounded-xl text-xs font-semibold">डिफल्ट रिस्टोर</button>
+            <button onclick="openAddCategoryModal()" class="px-4 py-2 bg-brand-600 text-white rounded-xl text-xs font-bold">+ नयाँ क्याटोगोरी थप्नुहोस्</button>
+          </div>
+        </div>
+        <div id="categoriesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      </section>
+
+      <!-- 4. PROVIDERS -->
+      <section id="tab-providers" class="tab-content space-y-4 hidden">
+        <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm flex items-center justify-between">
+          <h3 class="font-bold text-slate-900 font-nepali text-lg">सेवा प्रदायकहरू</h3>
+          <button onclick="openAddProviderModal()" class="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold">+ नयाँ प्राविधिक</button>
+        </div>
+        <div id="providersGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      </section>
+
+      <!-- 5. USERS -->
+      <section id="tab-users" class="tab-content space-y-4 hidden">
+        <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 text-slate-500 uppercase text-[11px] border-b border-slate-100">
               <tr>
-                <th id="thCustomer">ग्राहक विवरण</th>
-                <th id="thService">सेवा कोटि / प्रदायक</th>
-                <th id="thAddress">स्थान र ठेगाना</th>
-                <th id="thWorkDesc">कामको विवरण</th>
-                <th id="thTime">मिती / समय</th>
-                <th id="thBookingStatus">अवस्था (Status)</th>
-                <th id="thBookingRemarks">टिप्पणी / शुल्क</th>
-                <th id="thBookingActions">कार्य (Actions)</th>
+                <th class="py-3 px-4">नाम</th>
+                <th class="py-3 px-4">फोन</th>
+                <th class="py-3 px-4">शहर</th>
+                <th class="py-3 px-4">अर्डर संख्या</th>
+                <th class="py-3 px-4">पछिल्लो बुकिङ समय</th>
               </tr>
             </thead>
-            <tbody id="bookingsTableBody">
-              <tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 2rem;">डेटा लोड हुँदैछ...</td></tr>
-            </tbody>
+            <tbody id="usersTbody" class="divide-y divide-slate-100"></tbody>
           </table>
         </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- CATEGORY MODAL -->
+  <div id="categoryModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 hidden">
+    <div class="bg-white w-full max-w-lg rounded-2xl p-5 shadow-2xl">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="font-bold text-slate-900 font-nepali">क्याटोगोरी थप्नुहोस्</h3>
+        <button onclick="closeCategoryModal()"><i class="fa-solid fa-xmark"></i></button>
       </div>
-
-      <!-- TAB 2: PROVIDERS MANAGEMENT -->
-      <div class="tab-content" id="tabProviders" style="display: none;">
-        <div class="toolbar">
-          <div class="toolbar-left">
-            <select id="providerCityFilter">
-              <option value="All">सबै सहर (All Cities)</option>
-              <option value="Tulsipur">तुलसीपुर (Tulsipur)</option>
-              <option value="Ghorahi">घोराही (Ghorahi)</option>
-              <option value="Lamahi">लमही (Lamahi)</option>
-              <option value="Bhalubang">भालुवाङ (Bhalubang)</option>
-            </select>
-            <select id="providerCategoryFilter">
-              <option value="All">सबै कोटि (All Categories)</option>
-            </select>
-            <input type="text" id="providerSearchInput" placeholder="🔍 प्राविधिकको नाम वा फोन खोज्नुहोस्...">
-          </div>
-          <div class="toolbar-right">
-            <button class="btn-outline btn-sm" id="seedBtn">⚡ नमुना प्राविधिक लोड</button>
-            <button class="btn-primary" id="addProviderBtn">+ नयाँ प्राविधिक थप्नुहोस्</button>
-          </div>
+      <form onsubmit="saveCategory(event)" class="space-y-3">
+        <input type="text" id="catKey" required placeholder="आईडी (e.g. ac_repair)" class="w-full text-xs p-2.5 border rounded-xl">
+        <div class="grid grid-cols-2 gap-2">
+          <input type="text" id="catNameNepali" required placeholder="नेपाली नाम (e.g. एसी मर्मत)" class="w-full text-xs p-2.5 border rounded-xl font-nepali">
+          <input type="text" id="catNameEnglish" required placeholder="अंग्रेजी नाम (e.g. AC Repair)" class="w-full text-xs p-2.5 border rounded-xl">
         </div>
-
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th id="thProvName">नाम</th>
-                <th id="thProvCat">कोटि</th>
-                <th id="thProvCity">सहर</th>
-                <th id="thProvPhone">सम्पर्क फोन</th>
-                <th id="thProvStatus">स्थिति</th>
-                <th id="thProvExp">अनुभव / रेटिङ</th>
-                <th id="thProvActions">कार्य</th>
-              </tr>
-            </thead>
-            <tbody id="providersTableBody">
-              <tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">डेटा लोड हुँदैछ...</td></tr>
-            </tbody>
-          </table>
+        <textarea id="catDescription" rows="2" placeholder="कामको विवरण" class="w-full text-xs p-2.5 border rounded-xl"></textarea>
+        <div class="grid grid-cols-2 gap-2">
+          <input type="number" id="catOrder" value="1" placeholder="क्रम (Order)" class="w-full text-xs p-2.5 border rounded-xl">
+          <input type="text" id="catIcon" value="fa-wrench" placeholder="आइकन कोड" class="w-full text-xs p-2.5 border rounded-xl">
         </div>
-      </div>
-
-      <!-- TAB 3: CATEGORIES MANAGEMENT (NEW - ADD / REMOVE CATEGORIES) -->
-      <div class="tab-content" id="tabCategories" style="display: none;">
-        <div class="toolbar">
-          <div class="toolbar-left">
-            <h3 style="font-weight: 800; color: var(--primary);" id="txtCatHeader">सेवा कोटिहरूको सूची</h3>
-            <span style="font-size: 0.85rem; color: var(--text-muted);" id="txtCatSub">एप तथा वेबमा देखिने सेवाहरू व्यवस्थापन गर्नुहोस्</span>
-          </div>
-          <div class="toolbar-right">
-            <button class="btn-outline btn-sm" id="seedCategoriesBtn">⚡ आधारभूत कोटिहरू लोड</button>
-            <button class="btn-primary" id="addCategoryBtn">+ नयाँ कोटि थप्नुहोस् (Add Category)</button>
-          </div>
-        </div>
-
-        <div class="category-grid" id="categoryCardsGrid">
-          <!-- Dynamic category cards will render here -->
-        </div>
-      </div>
-
-      <!-- TAB 4: SYSTEM SETTINGS (NEW) -->
-      <div class="tab-content" id="tabSettings" style="display: none;">
-        <div class="settings-grid">
-          <!-- Business & Region Settings -->
-          <div class="settings-card">
-            <h3>🏢 <span id="txtSettingBizTitle">व्यावसायिक प्रोफाइल (Business Profile)</span></h3>
-            <p id="txtSettingBizDesc">मेरो सेवा नेपालको आधिकारिक विवरण र सञ्चालन क्षेत्र व्यवस्थापन गर्नुहोस्।</p>
-            <form id="settingsBusinessForm">
-              <div class="form-group">
-                <label>कम्पनी / एपको नाम (App Title)</label>
-                <input type="text" id="settingAppName" value="मेरो सेवा नेपाल (Mero Sewa Nepal)" required>
-              </div>
-              <div class="form-group">
-                <label>मुख्य सञ्चालन सहर (Main Hub)</label>
-                <input type="text" id="settingMainHub" value="तुलसीपुर तथा घोराही, दाङ" required>
-              </div>
-              <div class="form-group">
-                <label>आकस्मिक ग्राहक सम्पर्क नम्बर (Helpline Phone)</label>
-                <input type="text" id="settingHelpline" value="9847812345, 9809823456" required>
-              </div>
-              <div class="form-group">
-                <label>आधिकारिक इमेल (Support Email)</label>
-                <input type="email" id="settingSupportEmail" value="bhandaribimal778@gmail.com" required>
-              </div>
-              <button type="submit" class="btn-primary" id="saveBusinessSettingsBtn">💾 प्रोफाइल सेभ गर्नुहोस्</button>
-            </form>
-          </div>
-
-          <!-- Announcement Banner Settings -->
-          <div class="settings-card">
-            <h3>📢 <span id="txtSettingNoticeTitle">सूचना ब्यानर (Announcement Banner)</span></h3>
-            <p id="txtSettingNoticeDesc">ड्यासबोर्ड र ग्राहक एपको शीर्ष भागमा देखाउने विशेष सूचना।</p>
-            <form id="settingsNoticeForm">
-              <div class="form-group">
-                <label class="form-check">
-                  <input type="checkbox" id="settingBannerActive" checked>
-                  <strong>ब्यानर सक्रिय राख्ने (Show Announcement)</strong>
-                </label>
-              </div>
-              <div class="form-group">
-                <label>नेपाली सूचना सन्देश (Nepali Banner Text)</label>
-                <textarea id="settingBannerTextNe" rows="3">विशेष सूचना: तुलसीपुर तथा दाङ क्षेत्रभर सेवा द्रुत गतिमा उपलब्ध छ! दक्ष प्राविधिकहरू सिधै सम्पर्क गर्नुहोस्।</textarea>
-              </div>
-              <div class="form-group">
-                <label>अंग्रेजी सूचना सन्देश (English Banner Text)</label>
-                <textarea id="settingBannerTextEn" rows="2">Fast and reliable home service repairs across Tulsipur and Dang district!</textarea>
-              </div>
-              <button type="submit" class="btn-accent" id="saveNoticeSettingsBtn">📢 ब्यानर अपडेट गर्नुहोस्</button>
-            </form>
-          </div>
-
-          <!-- System & Security Info -->
-          <div class="settings-card">
-            <h3>🛡️ <span id="txtSettingSecTitle">सुरक्षा तथा प्रणाली स्थिति (Security & System)</span></h3>
-            <p id="txtSettingSecDesc">एडमिन प्रमाणीकरण तथा डाटाबेस स्थिति।</p>
-            <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.9rem;">
-              <div style="background: var(--table-header-bg); padding: 0.75rem 1rem; border-radius: 8px;">
-                <strong>मुख्य व्यवस्थापक इमेल:</strong><br>
-                <span id="txtOwnerEmailDisplay">bhandaribimal778@gmail.com</span>
-              </div>
-              <div style="background: var(--table-header-bg); padding: 0.75rem 1rem; border-radius: 8px;">
-                <strong>एडमिन दर्ता स्थिति:</strong><br>
-                <span class="badge badge-completed" id="lblRegStatusBadge">🔒 दर्ता लक गरिएको छ (One-Time Registered)</span>
-              </div>
-              <div style="background: var(--table-header-bg); padding: 0.75rem 1rem; border-radius: 8px;">
-                <strong>डेटाबेस ID:</strong><br>
-                <small style="word-break: break-all; color: var(--text-muted);">ai-studio-android-merosewa-a6e8bf47-6ac9-4204-80ab-52fe43abc7ce</small>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </main>
-
-  <!-- MODAL 1: ADD / EDIT PROVIDER -->
-  <div class="modal-backdrop" id="providerModal">
-    <div class="modal">
-      <div class="modal-header">
-        <h3 id="modalTitle">नयाँ प्राविधिक थप्नुहोस्</h3>
-        <button class="btn-outline btn-sm" id="closeModalBtn">✕</button>
-      </div>
-      <form id="providerForm">
-        <input type="hidden" id="providerId">
-        <div class="form-group">
-          <label id="lblModalName">प्राविधिकको नाम (Full Name) *</label>
-          <input type="text" id="provName" required placeholder="उदा: राम बहादुर थापा">
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label id="lblModalCategory">सेवा कोटि (Category) *</label>
-            <select id="provCategory" required>
-              <!-- Dynamically populated from Firestore categories -->
-            </select>
-          </div>
-          <div class="form-group">
-            <label id="lblModalCity">सहर / स्थान (City) *</label>
-            <select id="provCity" required>
-              <option value="Tulsipur">तुलसीपुर (Tulsipur)</option>
-              <option value="Ghorahi">घोराही (Ghorahi)</option>
-              <option value="Lamahi">लमही (Lamahi)</option>
-              <option value="Bhalubang">भालुवाङ (Bhalubang)</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-group">
-          <label id="lblModalDesc">सेवा विवरण (Description) *</label>
-          <textarea id="provDesc" rows="3" required placeholder="दक्षता, अनुभव तथा मर्मत गर्ने सामग्रीहरू खुलाउनुहोस्..."></textarea>
-        </div>
-        <div class="form-group">
-          <label id="lblModalPhone">मोबाइल नम्बर (Phone Number)</label>
-          <input type="text" id="provPhone" placeholder="उदा: 9847123456">
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label id="lblModalExp">अनुभव वर्ष (Experience)</label>
-            <input type="number" id="provExp" value="5" min="0" max="60">
-          </div>
-          <div class="form-group">
-            <label id="lblModalRating">रेटिङ (Rating 0-5)</label>
-            <input type="number" id="provRating" value="4.8" step="0.1" min="0" max="5">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-check">
-            <input type="checkbox" id="provPhonePublic" checked>
-            <span id="lblModalPhonePublic">फोन नम्बर सार्वजनिक देखाउने (Public Display)</span>
-          </label>
-          <label class="form-check">
-            <input type="checkbox" id="provActive" checked>
-            <span id="lblModalActive">सक्रिय स्थिति (Active on Marketplace)</span>
-          </label>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn-outline" id="cancelModalBtn">रद्द</button>
-          <button type="submit" class="btn-primary" id="saveProviderBtn">सेभ गर्नुहोस्</button>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="closeCategoryModal()" class="px-4 py-2 border rounded-xl text-xs">रद्द</button>
+          <button type="submit" id="saveCatBtn" class="px-5 py-2 bg-brand-600 text-white rounded-xl text-xs font-bold">सुरक्षित गर्नुहोस्</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- MODAL 2: ADD / EDIT CATEGORY -->
-  <div class="modal-backdrop" id="categoryModal">
-    <div class="modal">
-      <div class="modal-header">
-        <h3 id="catModalTitle">नयाँ सेवा कोटि थप्नुहोस्</h3>
-        <button class="btn-outline btn-sm" id="closeCatModalBtn">✕</button>
+  <!-- PROVIDER MODAL -->
+  <div id="providerModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 hidden">
+    <div class="bg-white w-full max-w-lg rounded-2xl p-5 shadow-2xl">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="font-bold text-slate-900 font-nepali">नयाँ सेवा प्रदायक</h3>
+        <button onclick="closeProviderModal()"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <form id="categoryForm">
-        <input type="hidden" id="categoryId">
-        <div class="form-row">
-          <div class="form-group" style="flex: 0 0 100px;">
-            <label>इमोजी / आइकन</label>
-            <input type="text" id="catIconInput" value="🛠️" style="text-align: center; font-size: 1.5rem;" required>
-          </div>
-          <div class="form-group" style="flex: 1;">
-            <label>कोटि ID / Key (अक्षर मात्र) *</label>
-            <input type="text" id="catKeyInput" required placeholder="उदा: electrician, carpenter, painter">
-          </div>
+      <form onsubmit="saveProvider(event)" class="space-y-3">
+        <input type="text" id="provName" required placeholder="प्राविधिकको नाम" class="w-full text-xs p-2.5 border rounded-xl font-nepali">
+        <div class="grid grid-cols-2 gap-2">
+          <select id="provCategory" required class="w-full text-xs p-2.5 border rounded-xl"></select>
+          <select id="provCity" required class="w-full text-xs p-2.5 border rounded-xl">
+            <option value="Tulsipur">तुलसीपुर (Tulsipur)</option>
+            <option value="Ghorahi">घोराही (Ghorahi)</option>
+            <option value="Lamahi">लमही (Lamahi)</option>
+            <option value="Bhalubang">भालुवाङ (Bhalubang)</option>
+          </select>
         </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>नेपाली नाम (Nepali Name) *</label>
-            <input type="text" id="catNameNeInput" required placeholder="उदा: सिकर्मी (काठको काम)">
-          </div>
-          <div class="form-group">
-            <label>अंग्रेजी नाम (English Name) *</label>
-            <input type="text" id="catNameEnInput" required placeholder="उदा: Carpentry & Woodwork">
-          </div>
-        </div>
-        <div class="form-group">
-          <label>विवरण (Description)</label>
-          <textarea id="catDescInput" rows="2" placeholder="यस कोटि अन्तर्गत गरिने मुख्य कामहरू..."></textarea>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label>सुरुवाती न्यूनतम शुल्क रु. (Base Rate)</label>
-            <input type="number" id="catBaseRateInput" value="350" min="0">
-          </div>
-          <div class="form-group">
-            <label>क्रम संख्या (Sort Order)</label>
-            <input type="number" id="catOrderInput" value="1" min="1">
-          </div>
-        </div>
-        <div class="form-group">
-          <label class="form-check">
-            <input type="checkbox" id="catActiveInput" checked>
-            <span>यो कोटि ग्राहकका लागि सक्रिय राख्ने (Active)</span>
-          </label>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn-outline" id="cancelCatModalBtn">रद्द</button>
-          <button type="submit" class="btn-primary" id="saveCatBtn">कोटि सेभ गर्नुहोस्</button>
+        <input type="tel" id="provPhone" required placeholder="फोन नम्बर" class="w-full text-xs p-2.5 border rounded-xl">
+        <textarea id="provDescription" rows="2" placeholder="परिचय वा कार्यक्षेत्र" class="w-full text-xs p-2.5 border rounded-xl"></textarea>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="closeProviderModal()" class="px-4 py-2 border rounded-xl text-xs">रद्द</button>
+          <button type="submit" id="saveProvBtn" class="px-5 py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold">सुरक्षित गर्नुहोस्</button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- MODAL 3: BOOKING DETAILS & STATUS UPDATE MODAL -->
-  <div class="modal-backdrop" id="bookingDetailModal">
-    <div class="modal modal-lg">
-      <div class="modal-header">
-        <h3 id="txtBookingModalHeader">सेवा बुकिङ पूर्ण विवरण (Booking Management)</h3>
-        <button class="btn-outline btn-sm" id="closeBookingModalBtn">✕</button>
-      </div>
-      <form id="bookingDetailForm">
-        <input type="hidden" id="editBookingId">
-        <div class="form-row">
-          <div class="form-group">
-            <label>ग्राहकको नाम (Customer Name)</label>
-            <input type="text" id="detailCustomerName" readonly style="background: var(--table-header-bg);">
-          </div>
-          <div class="form-group">
-            <label>सम्पर्क फोन (Customer Phone)</label>
-            <div style="display: flex; gap: 0.5rem;">
-              <input type="text" id="detailCustomerPhone" readonly style="background: var(--table-header-bg); flex: 1;">
-              <a id="btnCallCustomer" href="#" class="btn-accent" style="text-decoration: none; padding: 0.55rem 0.9rem;">📞 कल</a>
-              <a id="btnWhatsAppCustomer" href="#" target="_blank" class="btn-primary" style="text-decoration: none; padding: 0.55rem 0.9rem;">💬 च्याट</a>
-            </div>
-          </div>
-        </div>
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
 
-        <div class="form-row">
-          <div class="form-group">
-            <label>सहर / स्थान (City)</label>
-            <input type="text" id="detailCity" readonly style="background: var(--table-header-bg);">
-          </div>
-          <div class="form-group">
-            <label>पूर्ण ठेगाना (Detailed Address / Landmark)</label>
-            <input type="text" id="detailAddress" readonly style="background: var(--table-header-bg);">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>ग्राहकले उल्लेख गरेको समस्या / कामको विवरण (Work Description)</label>
-          <textarea id="detailDescription" rows="2" readonly style="background: var(--table-header-bg);"></textarea>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label>माग गरिएको मिती तथा समय (Preferred Time)</label>
-            <input type="text" id="detailPreferredTime" readonly style="background: var(--table-header-bg);">
-          </div>
-          <div class="form-group">
-            <label>सेवा अवस्था (Booking Status) *</label>
-            <select id="detailStatus" required>
-              <option value="pending">⏳ प्रतीक्षारत (Pending)</option>
-              <option value="accepted">🔵 स्वीकृत (Accepted)</option>
-              <option value="in_progress">⚙️ काम भइरहेको (In Progress)</option>
-              <option value="completed">✅ सम्पन्न (Completed)</option>
-              <option value="cancelled">❌ रद्द (Cancelled)</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Assign Provider Section -->
-        <div class="form-row">
-          <div class="form-group">
-            <label>जिम्मेवार प्राविधिक तोक्नुहोस् (Assign Provider)</label>
-            <select id="detailAssignedProvider">
-              <option value="">-- कुनै पनि उपलब्ध प्राविधिक (Unassigned) --</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>अन्तिम शुल्क रु. (Final Service Charge)</label>
-            <input type="number" id="detailFinalAmount" placeholder="उदा: 750" min="0">
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>व्यवस्थापक टिप्पणी (Admin Remarks / Notes)</label>
-          <textarea id="detailAdminRemarks" rows="2" placeholder="ग्राहकलाई दिइएको जानकारी, काम सम्पन्न भएको मिति वा अन्य नोट..."></textarea>
-        </div>
-
-        <div class="modal-footer" style="justify-content: space-between;">
-          <button type="button" class="btn-danger btn-sm" id="btnDeleteBooking">🗑️ बुकिङ मेटाउनुहोस्</button>
-          <div style="display: flex; gap: 0.75rem;">
-            <button type="button" class="btn-outline" id="cancelBookingModalBtn">बन्द गर्नुहोस्</button>
-            <button type="submit" class="btn-primary" id="saveBookingDetailBtn">अपडेट गर्नुहोस्</button>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL 4: FORGOT PASSWORD MODAL -->
-  <div class="modal-backdrop" id="forgotPasswordModal">
-    <div class="modal">
-      <div class="modal-header">
-        <h3 id="txtForgotTitle">पासवर्ड पुनःप्राप्ति (Password Reset)</h3>
-        <button class="btn-outline btn-sm" id="closeForgotModalBtn">✕</button>
-      </div>
-      <form id="forgotPasswordForm">
-        <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;" id="txtForgotDesc">
-          आफ्नो दर्ता भएको व्यवस्थापक इमेल ठेगाना लेख्नुहोस्। हामी तपाईंको इमेलमा पासवर्ड रिसेट गर्ने आधिकारिक लिङ्क पठाउनेछौं।
-        </p>
-        <div class="form-group">
-          <label id="lblForgotEmail">व्यवस्थापक इमेल (Admin Email) *</label>
-          <input type="email" id="forgotEmailInput" required placeholder="admin@merosewa.com">
-        </div>
-        <div class="alert alert-danger" id="forgotAlert" style="display: none;"></div>
-        <div class="alert alert-success" id="forgotSuccess" style="display: none;"></div>
-        <div class="modal-footer">
-          <button type="button" class="btn-outline" id="cancelForgotModalBtn">रद्द</button>
-          <button type="submit" class="btn-primary" id="sendResetBtn">रिसेट लिङ्क पठाउनुहोस्</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- FLOATING TOAST CONTAINER -->
-  <div id="toastContainer"></div>
-
-  <!-- Firebase Modular SDK -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { 
-      getAuth, 
-      signInWithEmailAndPassword,
-      createUserWithEmailAndPassword,
-      sendPasswordResetEmail,
-      updateProfile,
-      signOut, 
-      onAuthStateChanged 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { 
-      getFirestore, 
-      collection, 
-      doc, 
-      getDoc, 
-      getDocs,
-      setDoc, 
-      updateDoc, 
-      deleteDoc, 
-      onSnapshot, 
-      serverTimestamp 
-    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    // 1. Firebase Configuration for Mero Sewa Nepal
+  <!-- LOGIC SCRIPT -->
+  <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDP8T7GCdGY0_sqpqOtHkn1G6aOqxjG3gs",
       authDomain: "mero-sewa-nepal.firebaseapp.com",
@@ -1351,1266 +372,354 @@
       appId: "1:622227844528:android:f7b695ff38f54e8105ba75"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
 
-    // Custom named database ID shared with the Android app
-    const DATABASE_ID = "ai-studio-android-merosewa-a6e8bf47-6ac9-4204-80ab-52fe43abc7ce";
-    const db = getFirestore(app, DATABASE_ID);
+    let db;
+    try {
+      db = firebase.app().firestore("ai-studio-android-merosewa-a6e8bf47-6ac9-4204-80ab-52fe43abc7ce");
+    } catch (e) {
+      db = firebase.firestore();
+    }
+    const auth = firebase.auth();
 
-    // Bootstrapped Owner Email
-    const OWNER_EMAIL = "bhandaribimal778@gmail.com";
+    let allBookings = [], currentBookingFilter = 'all', allCategories = [], allProviders = [];
 
-    // Global State Variables
-    let currentUser = null;
-    let allProviders = [];
-    let allBookings = [];
-    let allCategories = [];
-    let notifications = [];
-    let isRegistrationLocked = true; // Default locked until checked
-    let initialSyncDone = false;
-
-    let unsubscribeProviders = null;
-    let unsubscribeBookings = null;
-    let unsubscribeCategories = null;
-
-    let currentLanguage = localStorage.getItem("mero_admin_lang") || "ne";
-    let isDarkMode = localStorage.getItem("mero_admin_theme") === "dark";
-    let emailAuthMode = "login"; // "login" or "register"
-
-    // Audio Chime Generator using Web Audio API (Zero external assets needed)
-    function playChimeSound() {
-      try {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const now = audioCtx.currentTime;
-        
-        // Tone 1
-        const osc1 = audioCtx.createOscillator();
-        const gain1 = audioCtx.createGain();
-        osc1.type = 'sine';
-        osc1.frequency.setValueAtTime(587.33, now); // D5
-        gain1.gain.setValueAtTime(0.15, now);
-        gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
-        osc1.connect(gain1);
-        gain1.connect(audioCtx.destination);
-        osc1.start(now);
-        osc1.stop(now + 0.35);
-
-        // Tone 2
-        const osc2 = audioCtx.createOscillator();
-        const gain2 = audioCtx.createGain();
-        osc2.type = 'sine';
-        osc2.frequency.setValueAtTime(880, now + 0.12); // A5
-        gain2.gain.setValueAtTime(0.18, now + 0.12);
-        gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.55);
-        osc2.connect(gain2);
-        gain2.connect(audioCtx.destination);
-        osc2.start(now + 0.12);
-        osc2.stop(now + 0.55);
-      } catch (e) {
-        console.warn("Audio chime disabled:", e);
-      }
+    function toNepaliDigits(str) {
+      if (!str) return '';
+      const nepaliDigits = ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'];
+      return String(str).replace(/[0-9]/g, match => nepaliDigits[parseInt(match)]);
     }
 
-    // Floating Toast Notification
-    function showToast(title, body) {
-      const container = document.getElementById("toastContainer");
-      const toast = document.createElement("div");
-      toast.className = "toast";
-      toast.innerHTML = `<span>🔔</span><div><strong>${escapeHtml(title)}</strong><br><small>${escapeHtml(body)}</small></div>`;
-      container.appendChild(toast);
-      setTimeout(() => {
-        toast.style.opacity = "0";
-        setTimeout(() => toast.remove(), 400);
-      }, 5000);
+    function formatRelativeTime(date) {
+      if (!date) return 'भर्खरै';
+      const now = new Date();
+      const diffSec = Math.floor((now - date) / 1000);
+      if (diffSec < 60) return 'भर्खरै (Just now)';
+      const diffMin = Math.floor(diffSec / 60);
+      if (diffMin < 60) return `${toNepaliDigits(diffMin)} मिनेट अगाडि (${diffMin}m ago)`;
+      const diffHrs = Math.floor(diffMin / 60);
+      if (diffHrs < 24) return `${toNepaliDigits(diffHrs)} घण्टा अगाडि (${diffHrs}h ago)`;
+      const diffDays = Math.floor(diffHrs / 24);
+      if (diffDays < 7) return `${toNepaliDigits(diffDays)} दिन अगाडि (${diffDays}d ago)`;
+      return date.toLocaleDateString('ne-NP');
     }
 
-    // DOM Elements Cache
-    const loginView = document.getElementById("loginView");
-    const dashboardView = document.getElementById("dashboardView");
-    const authHeader = document.getElementById("authHeader");
-    const userEmailLabel = document.getElementById("userEmailLabel");
-    const logoutBtn = document.getElementById("logoutBtn");
-    const loginAlert = document.getElementById("loginAlert");
-    const loginSuccessAlert = document.getElementById("loginSuccessAlert");
-    const themeToggleBtn = document.getElementById("themeToggleBtn");
-    const langToggleBtn = document.getElementById("langToggleBtn");
-    const notifBellBtn = document.getElementById("notifBellBtn");
-    const notifPanel = document.getElementById("notifPanel");
-    const notifBadge = document.getElementById("notifBadge");
-    const notifList = document.getElementById("notifList");
-    const clearNotifsBtn = document.getElementById("clearNotifsBtn");
-
-    // Remember Me
-    const savedEmail = localStorage.getItem("mero_admin_saved_email");
-    if (savedEmail) {
-      document.getElementById("authEmailInput").value = savedEmail;
-      document.getElementById("rememberMeCheck").checked = true;
-    }
-
-    // Apply Saved Theme
-    function applyTheme() {
-      if (isDarkMode) {
-        document.body.classList.add("dark-theme");
-        document.getElementById("themeIcon").textContent = "☀️";
-        document.getElementById("themeLabel").textContent = currentLanguage === "ne" ? "लाइट मोड" : "Light Mode";
-      } else {
-        document.body.classList.remove("dark-theme");
-        document.getElementById("themeIcon").textContent = "🌙";
-        document.getElementById("themeLabel").textContent = currentLanguage === "ne" ? "डार्क मोड" : "Dark Mode";
-      }
-    }
-    applyTheme();
-
-    themeToggleBtn.addEventListener("click", () => {
-      isDarkMode = !isDarkMode;
-      localStorage.setItem("mero_admin_theme", isDarkMode ? "dark" : "light");
-      applyTheme();
-    });
-
-    // Password Visibility Toggle
-    const togglePasswordBtn = document.getElementById("togglePasswordBtn");
-    const authPasswordInput = document.getElementById("authPasswordInput");
-    togglePasswordBtn.addEventListener("click", () => {
-      const isPwd = authPasswordInput.getAttribute("type") === "password";
-      authPasswordInput.setAttribute("type", isPwd ? "text" : "password");
-      togglePasswordBtn.textContent = isPwd ? "🙈" : "👁️";
-    });
-
-    // Bell Notification Dropdown Toggle
-    notifBellBtn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      notifPanel.classList.toggle("open");
-    });
-    document.addEventListener("click", (e) => {
-      if (!notifPanel.contains(e.target) && e.target !== notifBellBtn) {
-        notifPanel.classList.remove("open");
-      }
-    });
-    clearNotifsBtn.addEventListener("click", () => {
-      notifications = [];
-      updateNotifUI();
-    });
-
-    function updateNotifUI() {
-      if (notifications.length === 0) {
-        notifBadge.style.display = "none";
-        notifList.innerHTML = `<div style="padding: 1.5rem; text-align: center; color: var(--text-muted); font-size: 0.85rem;">${currentLanguage === 'ne' ? 'कुनै नयाँ सूचना छैन।' : 'No new notifications.'}</div>`;
-        return;
-      }
-      notifBadge.textContent = notifications.length;
-      notifBadge.style.display = "inline-block";
-      notifList.innerHTML = notifications.map((n, idx) => `
-        <div class="notif-item ${n.unread ? 'unread' : ''}" onclick="openBookingFromNotif('${n.bookingId}')">
-          <strong>${escapeHtml(n.title)}</strong>
-          <span>${escapeHtml(n.message)}</span>
-          <span class="notif-time">${n.time}</span>
+    function formatBookingTime(timestamp) {
+      if (!timestamp) return '<span class="text-slate-400">उपलब्ध छैन</span>';
+      const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp.seconds * 1000);
+      const timeStr = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+      const dateStr = date.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' });
+      return `
+        <div class="flex flex-col">
+          <span class="font-bold text-slate-800">${dateStr}, ${timeStr}</span>
+          <span class="text-[11px] text-brand-600 font-medium">${formatRelativeTime(date)}</span>
         </div>
-      `).join("");
+      `;
     }
 
-    window.openBookingFromNotif = function(bookingId) {
-      notifPanel.classList.remove("open");
-      // Switch to bookings tab
-      document.querySelector('[data-tab="tabBookings"]').click();
-      if (bookingId) {
-        openBookingModal(bookingId);
-      }
-    };
-
-    // Bilingual Dictionary
-    const i18n = {
-      ne: {
-        brandSubtitle: "व्यवस्थापक नियन्त्रण कक्ष (Admin Panel)",
-        loginTitle: "व्यवस्थापक लगइन",
-        loginDesc: "यो ड्यासबोर्ड आधिकारिक व्यवस्थापकका लागि मात्र सुरक्षित छ। इमेल र पासवर्ड प्रयोग गरी लगइन गर्नुहोस्।",
-        tabLogin: "लगइन (Sign In)",
-        tabRegister: "पहिलो पटक दर्ता (One-Time Setup)",
-        emailLabel: "इमेल ठेगाना (Admin Email) *",
-        passwordLabel: "पासवर्ड (Password) *",
-        btnSubmitLogin: "लगइन गर्नुहोस् (Sign In)",
-        btnSubmitRegister: "पहिलो पटक व्यवस्थापक दर्ता गर्नुहोस्",
-        statProviders: "सक्रिय प्राविधिकहरू",
-        statPending: "प्रतीक्षारत बुकिङ",
-        statInProgress: "काम भइरहेको",
-        statCompleted: "सम्पन्न सेवाहरू",
-        tabBookings: "ग्राहक बुकिङहरू (Bookings)",
-        tabProviders: "सेवा प्रदायक व्यवस्थापन (Providers)",
-        tabCategories: "सेवा कोटिहरू (Categories)",
-        tabSettings: "प्रणाली सेटिङ्स (Settings)",
-        thCustomer: "ग्राहक विवरण",
-        thService: "सेवा कोटि / प्रदायक",
-        thAddress: "स्थान र ठेगाना",
-        thWorkDesc: "कामको विवरण",
-        thTime: "मिती / समय",
-        thBookingStatus: "अवस्था (Status)",
-        thBookingRemarks: "टिप्पणी / शुल्क",
-        thBookingActions: "कार्य (Actions)",
-        thProvName: "नाम",
-        thProvCat: "कोटि",
-        thProvCity: "सहर",
-        thProvPhone: "सम्पर्क फोन",
-        thProvStatus: "स्थिति",
-        thProvExp: "अनुभव / रेटिङ",
-        thProvActions: "कार्य",
-        logout: "लगआउट",
-        forgotLink: "पासवर्ड बिर्सनुभयो? (Forgot?)"
-      },
-      en: {
-        brandSubtitle: "Administrative Control Panel",
-        loginTitle: "Administrator Sign In",
-        loginDesc: "This panel is strictly restricted to authorized administrators. Sign in with your registered email and password.",
-        tabLogin: "Sign In",
-        tabRegister: "One-Time Setup",
-        emailLabel: "Admin Email *",
-        passwordLabel: "Password *",
-        btnSubmitLogin: "Sign In to Dashboard",
-        btnSubmitRegister: "Register Initial Admin",
-        statProviders: "Active Providers",
-        statPending: "Pending Bookings",
-        statInProgress: "In Progress",
-        statCompleted: "Completed Services",
-        tabBookings: "Customer Bookings",
-        tabProviders: "Service Providers",
-        tabCategories: "Service Categories",
-        tabSettings: "System Settings",
-        thCustomer: "Customer Info",
-        thService: "Category / Provider",
-        thAddress: "Location & Address",
-        thWorkDesc: "Work Description",
-        thTime: "Date & Time",
-        thBookingStatus: "Status",
-        thBookingRemarks: "Remarks / Fee",
-        thBookingActions: "Actions",
-        thProvName: "Name",
-        thProvCat: "Category",
-        thProvCity: "City",
-        thProvPhone: "Phone",
-        thProvStatus: "Status",
-        thProvExp: "Experience / Rating",
-        thProvActions: "Actions",
-        logout: "Logout",
-        forgotLink: "Forgot Password?"
-      }
-    };
-
-    function applyLanguage() {
-      const dict = i18n[currentLanguage];
-      document.getElementById("currentLangLabel").textContent = currentLanguage === "ne" ? "English" : "नेपाली";
-      document.getElementById("txtBrandSubtitle").textContent = dict.brandSubtitle;
-      document.getElementById("txtLoginTitle").textContent = emailAuthMode === "register" ? (currentLanguage === "ne" ? "पहिलो पटक व्यवस्थापक दर्ता" : "One-Time Admin Setup") : dict.loginTitle;
-      document.getElementById("txtLoginDesc").textContent = dict.loginDesc;
-      document.getElementById("tabEmailLogin").textContent = dict.tabLogin;
-      document.getElementById("tabEmailRegister").textContent = dict.tabRegister;
-      document.getElementById("lblEmail").textContent = dict.emailLabel;
-      document.getElementById("lblPassword").textContent = dict.passwordLabel;
-      document.getElementById("emailSubmitBtn").textContent = emailAuthMode === "login" ? dict.btnSubmitLogin : dict.btnSubmitRegister;
-      document.getElementById("forgotPasswordLink").textContent = dict.forgotLink;
-
-      document.getElementById("statTitleProviders").textContent = dict.statProviders;
-      document.getElementById("statTitlePending").textContent = dict.statPending;
-      document.getElementById("statTitleInProgress").textContent = dict.statInProgress;
-      document.getElementById("statTitleCompleted").textContent = dict.statCompleted;
-
-      document.getElementById("txtTabBookings").textContent = dict.tabBookings;
-      document.getElementById("txtTabProviders").textContent = dict.tabProviders;
-      document.getElementById("txtTabCategories").textContent = dict.tabCategories;
-      document.getElementById("txtTabSettings").textContent = dict.tabSettings;
-
-      document.getElementById("thCustomer").textContent = dict.thCustomer;
-      document.getElementById("thService").textContent = dict.thService;
-      document.getElementById("thAddress").textContent = dict.thAddress;
-      document.getElementById("thWorkDesc").textContent = dict.thWorkDesc;
-      document.getElementById("thTime").textContent = dict.thTime;
-      document.getElementById("thBookingStatus").textContent = dict.thBookingStatus;
-      document.getElementById("thBookingRemarks").textContent = dict.thBookingRemarks;
-      document.getElementById("thBookingActions").textContent = dict.thBookingActions;
-
-      document.getElementById("thProvName").textContent = dict.thProvName;
-      document.getElementById("thProvCat").textContent = dict.thProvCat;
-      document.getElementById("thProvCity").textContent = dict.thProvCity;
-      document.getElementById("thProvPhone").textContent = dict.thProvPhone;
-      document.getElementById("thProvStatus").textContent = dict.thProvStatus;
-      document.getElementById("thProvExp").textContent = dict.thProvExp;
-      document.getElementById("thProvActions").textContent = dict.thProvActions;
-      document.getElementById("logoutBtn").textContent = dict.logout;
-
-      applyTheme();
-      renderProviders();
-      renderBookings();
-      renderCategories();
-    }
-
-    langToggleBtn.addEventListener("click", () => {
-      currentLanguage = currentLanguage === "ne" ? "en" : "ne";
-      localStorage.setItem("mero_admin_lang", currentLanguage);
-      applyLanguage();
-    });
-
-    // 2. ONE-TIME REGISTRATION CHECK & INITIALIZATION
-    async function checkAdminRegistrationStatus() {
-      try {
-        const sysDoc = await getDoc(doc(db, "settings", "system"));
-        if (sysDoc.exists() && sysDoc.data().adminInitialized) {
-          isRegistrationLocked = true;
-        } else {
-          // Double check admins collection
-          const adminsSnap = await getDocs(collection(db, "admins"));
-          isRegistrationLocked = !adminsSnap.empty;
-        }
-      } catch (err) {
-        console.warn("Check admin status error:", err);
-        // Default to locked for safety
-        isRegistrationLocked = true;
-      }
-
-      const authTabsContainer = document.getElementById("authTabsContainer");
-      const initialSetupNotice = document.getElementById("initialSetupNotice");
-      const regLockedNotice = document.getElementById("regLockedNotice");
-
-      if (isRegistrationLocked) {
-        // Admin already exists! Hide Registration completely
-        authTabsContainer.style.display = "none";
-        initialSetupNotice.style.display = "none";
-        regLockedNotice.style.display = "block";
-        setAuthMode("login");
-      } else {
-        // First-time setup allowed!
-        authTabsContainer.style.display = "flex";
-        initialSetupNotice.style.display = "block";
-        regLockedNotice.style.display = "none";
-        setAuthMode("login");
+    function renderStatusBadge(status) {
+      const s = (status || 'pending').toLowerCase().replace('-', '_');
+      switch (s) {
+        case 'pending': return `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-200">प्रतीक्षारत (Pending)</span>`;
+        case 'accepted': return `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">स्वीकृत (Accepted)</span>`;
+        case 'in_process': case 'in_progress': return `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-purple-50 text-purple-700 border border-purple-200 animate-pulse">काम भइरहेको छ (In Process)</span>`;
+        case 'completed': return `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">सम्पन्न (Completed)</span>`;
+        case 'cancelled': return `<span class="px-2.5 py-1 rounded-full text-xs font-bold bg-red-50 text-red-700 border border-red-200">रद्द (Cancelled)</span>`;
+        default: return `<span class="px-2 py-0.5 rounded text-xs bg-slate-100 text-slate-600">${status}</span>`;
       }
     }
 
-    function setAuthMode(mode) {
-      if (mode === "register" && isRegistrationLocked) {
-        alert(currentLanguage === "ne" ? "व्यवस्थापक दर्ता पहिले नै बन्द गरिएको छ।" : "Admin registration is locked.");
-        return;
-      }
-      emailAuthMode = mode;
-      const authNameGroup = document.getElementById("authNameGroup");
-      const authConfirmGroup = document.getElementById("authConfirmGroup");
-      const tabEmailLogin = document.getElementById("tabEmailLogin");
-      const tabEmailRegister = document.getElementById("tabEmailRegister");
-      const emailSubmitBtn = document.getElementById("emailSubmitBtn");
-
-      if (mode === "register") {
-        tabEmailRegister.classList.add("active");
-        tabEmailLogin.classList.remove("active");
-        authNameGroup.style.display = "block";
-        authConfirmGroup.style.display = "block";
-        document.getElementById("authNameInput").setAttribute("required", "true");
-        document.getElementById("authConfirmPasswordInput").setAttribute("required", "true");
-        emailSubmitBtn.textContent = i18n[currentLanguage].btnSubmitRegister;
-      } else {
-        tabEmailLogin.classList.add("active");
-        tabEmailRegister.classList.remove("active");
-        authNameGroup.style.display = "none";
-        authConfirmGroup.style.display = "none";
-        document.getElementById("authNameInput").removeAttribute("required");
-        document.getElementById("authConfirmPasswordInput").removeAttribute("required");
-        emailSubmitBtn.textContent = i18n[currentLanguage].btnSubmitLogin;
-      }
+    function showToast(msg, type = 'success') {
+      const c = document.getElementById('toastContainer');
+      const t = document.createElement('div');
+      t.className = `p-3 rounded-xl text-xs font-bold text-white shadow-xl ${type === 'success' ? 'bg-emerald-600' : 'bg-red-600'}`;
+      t.innerText = msg;
+      c.appendChild(t);
+      setTimeout(() => t.remove(), 3000);
     }
 
-    document.getElementById("tabEmailLogin").addEventListener("click", (e) => {
-      e.preventDefault();
-      setAuthMode("login");
-    });
-    document.getElementById("tabEmailRegister").addEventListener("click", (e) => {
-      e.preventDefault();
-      setAuthMode("register");
-    });
-
-    // 3. EMAIL & PASSWORD AUTHENTICATION (NO GOOGLE SIGN IN)
-    document.getElementById("emailAuthForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      loginAlert.style.display = "none";
-      loginSuccessAlert.style.display = "none";
-
-      const email = document.getElementById("authEmailInput").value.trim();
-      const password = document.getElementById("authPasswordInput").value;
-      const remember = document.getElementById("rememberMeCheck").checked;
-
-      if (remember) {
-        localStorage.setItem("mero_admin_saved_email", email);
-      } else {
-        localStorage.removeItem("mero_admin_saved_email");
-      }
-
-      if (emailAuthMode === "register") {
-        if (isRegistrationLocked) {
-          loginAlert.textContent = currentLanguage === "ne" 
-            ? "व्यवस्थापक खाता पहिले नै सिर्जना भइसकेको छ। थप दर्ता निषेधित छ।"
-            : "Admin registration is locked. Additional registrations are prohibited.";
-          loginAlert.style.display = "block";
-          return;
-        }
-
-        const confirmPassword = document.getElementById("authConfirmPasswordInput").value;
-        if (password !== confirmPassword) {
-          loginAlert.textContent = currentLanguage === "ne" ? "दुबै पासवर्ड मिलेनन्।" : "Passwords do not match.";
-          loginAlert.style.display = "block";
-          return;
-        }
-        if (password.length < 6) {
-          loginAlert.textContent = currentLanguage === "ne" ? "पासवर्ड कमसेकम ६ अक्षरको हुनुपर्दछ।" : "Password must be at least 6 characters.";
-          loginAlert.style.display = "block";
-          return;
-        }
-
-        try {
-          const userCred = await createUserWithEmailAndPassword(auth, email, password);
-          const fullName = document.getElementById("authNameInput").value.trim() || "Admin";
-          await updateProfile(userCred.user, { displayName: fullName });
-
-          // Register in admins collection
-          await setDoc(doc(db, "admins", userCred.user.uid), {
-            role: "admin",
-            email: email,
-            name: fullName,
-            isOwner: true,
-            createdAt: serverTimestamp()
-          });
-
-          // Lock registration permanently in settings/system
-          await setDoc(doc(db, "settings", "system"), {
-            adminInitialized: true,
-            ownerEmail: email,
-            initializedAt: serverTimestamp()
-          });
-
-          isRegistrationLocked = true;
-          loginSuccessAlert.textContent = currentLanguage === "ne"
-            ? "बधाई छ! व्यवस्थापक खाता सफलतापूर्वक सिर्जना भयो र दर्ता स्थायी रूपमा बन्द गरियो।"
-            : "Success! Admin registered and registration is now permanently locked.";
-          loginSuccessAlert.style.display = "block";
-          checkAdminRegistrationStatus();
-        } catch (err) {
-          handleAuthError(err);
-        }
-      } else {
-        // Standard Email / Password Login
-        try {
-          await signInWithEmailAndPassword(auth, email, password);
-        } catch (err) {
-          handleAuthError(err);
-        }
-      }
-    });
-
-    function handleAuthError(err) {
-      let msg = err.message || err;
-      if (err.code === "auth/invalid-credential" || err.code === "auth/wrong-password" || err.code === "auth/user-not-found") {
-        msg = currentLanguage === "ne" ? "इमेल वा पासवर्ड मिलेन। कृपया जाँच गरी पुनः प्रयास गर्नुहोस्।" : "Invalid email or password.";
-      } else if (err.code === "auth/email-already-in-use") {
-        msg = currentLanguage === "ne" ? "यो इमेल पहिले नै दर्ता छ। कृपया लगइन गर्नुहोस्।" : "Email already registered. Please sign in.";
-      } else if (err.code === "auth/too-many-requests") {
-        msg = currentLanguage === "ne" ? "धेरै असफल प्रयासहरू भए। कृपया केही समयपछि पुनः प्रयास गर्नुहोस्।" : "Too many failed attempts. Try again later.";
-      }
-      loginAlert.textContent = msg;
-      loginAlert.style.display = "block";
-    }
-
-    // 4. FORGOT PASSWORD MODAL & RESET FLOW
-    const forgotPasswordModal = document.getElementById("forgotPasswordModal");
-    const forgotPasswordLink = document.getElementById("forgotPasswordLink");
-    const forgotAlert = document.getElementById("forgotAlert");
-    const forgotSuccess = document.getElementById("forgotSuccess");
-
-    forgotPasswordLink.addEventListener("click", () => {
-      const email = document.getElementById("authEmailInput").value.trim();
-      document.getElementById("forgotEmailInput").value = email;
-      forgotAlert.style.display = "none";
-      forgotSuccess.style.display = "none";
-      forgotPasswordModal.classList.add("open");
-    });
-
-    document.getElementById("closeForgotModalBtn").addEventListener("click", () => forgotPasswordModal.classList.remove("open"));
-    document.getElementById("cancelForgotModalBtn").addEventListener("click", () => forgotPasswordModal.classList.remove("open"));
-
-    document.getElementById("forgotPasswordForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      forgotAlert.style.display = "none";
-      forgotSuccess.style.display = "none";
-      const resetEmail = document.getElementById("forgotEmailInput").value.trim();
-      if (!resetEmail) return;
-
-      try {
-        await sendPasswordResetEmail(auth, resetEmail);
-        forgotSuccess.textContent = currentLanguage === "ne"
-          ? `पासवर्ड रिसेट गर्ने आधिकारिक लिङ्क ${resetEmail} मा पठाइयो। कृपया इनबक्स तथा स्प्याम फोल्डर हेर्नुहोस्।`
-          : `Password reset link sent to ${resetEmail}. Please check your inbox and spam folder.`;
-        forgotSuccess.style.display = "block";
-      } catch (err) {
-        forgotAlert.textContent = err.message || err;
-        forgotAlert.style.display = "block";
-      }
-    });
-
-    logoutBtn.addEventListener("click", () => signOut(auth));
-
-    // 5. AUTH STATE LISTENER & ROLE VERIFICATION
-    onAuthStateChanged(auth, async (user) => {
-      currentUser = user;
+    auth.onAuthStateChanged(user => {
+      const overlay = document.getElementById('authOverlay');
       if (user) {
-        let isAdmin = false;
-        if (user.email && user.email.toLowerCase() === OWNER_EMAIL.toLowerCase()) {
-          isAdmin = true;
-          try {
-            const adminDocRef = doc(db, "admins", user.uid);
-            const snap = await getDoc(adminDocRef);
-            if (!snap.exists()) {
-              await setDoc(adminDocRef, {
-                role: "admin",
-                email: user.email,
-                isOwner: true,
-                createdAt: serverTimestamp()
-              });
-            }
-          } catch(e) { console.warn("Admin sync:", e); }
-        } else {
-          try {
-            const snap = await getDoc(doc(db, "admins", user.uid));
-            if (snap.exists() && snap.data().role === "admin") {
-              isAdmin = true;
-            }
-          } catch (e) {
-            console.error("Admin check:", e);
-          }
-        }
-
-        if (isAdmin) {
-          loginView.style.display = "none";
-          dashboardView.style.display = "block";
-          authHeader.style.display = "flex";
-          userEmailLabel.textContent = user.email;
-          document.getElementById("txtOwnerEmailDisplay").textContent = user.email;
-          startRealtimeSync();
-          loadSettings();
-        } else {
-          loginAlert.textContent = currentLanguage === "ne"
-            ? `पहुँच अस्वीकृत! (${user.email}) आधिकारिक व्यवस्थापक खाता होइन।`
-            : `Access Denied! (${user.email}) is not authorized as an administrator.`;
-          loginAlert.style.display = "block";
-          loginView.style.display = "block";
-          dashboardView.style.display = "none";
-          authHeader.style.display = "none";
-          signOut(auth);
-        }
+        overlay.classList.add('hidden');
+        document.getElementById('adminEmail').innerText = user.email || 'Admin';
+        startListeners();
       } else {
-        loginView.style.display = "block";
-        dashboardView.style.display = "none";
-        authHeader.style.display = "none";
-        stopRealtimeSync();
-        checkAdminRegistrationStatus();
+        overlay.classList.remove('hidden');
       }
     });
 
-    // 6. REAL-TIME DATA LISTENERS
-    function startRealtimeSync() {
-      // 1. Providers Listener
-      unsubscribeProviders = onSnapshot(collection(db, "providers"), (snapshot) => {
-        allProviders = [];
-        snapshot.forEach(docSnap => {
-          allProviders.push({ id: docSnap.id, ...docSnap.data() });
+    document.getElementById('googleSignInBtn').addEventListener('click', () => {
+      auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+    });
+
+    document.getElementById('emailLoginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      auth.signInWithEmailAndPassword(document.getElementById('loginEmail').value, document.getElementById('loginPassword').value)
+        .catch(err => {
+          document.getElementById('authErrorMessage').innerText = err.message;
+          document.getElementById('authErrorMessage').classList.remove('hidden');
         });
-        renderProviders();
-        populateProviderOptions();
-        updateMetrics();
-      }, (err) => console.error("Providers err:", err));
+    });
 
-      // 2. Bookings Listener (With Real-Time Notification Chime)
-      unsubscribeBookings = onSnapshot(collection(db, "bookings"), (snapshot) => {
-        const prevCount = allBookings.length;
-        const newBookings = [];
-        snapshot.forEach(docSnap => {
-          newBookings.push({ id: docSnap.id, ...docSnap.data() });
-        });
-        newBookings.sort((a,b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+    document.getElementById('signOutBtn').addEventListener('click', () => auth.signOut());
 
-        // Detect new incoming bookings in real-time
-        if (initialSyncDone && newBookings.length > prevCount) {
-          const latest = newBookings[0];
-          playChimeSound();
-          showToast(
-            currentLanguage === 'ne' ? "नयाँ बुकिङ प्राप्त भयो!" : "New Booking Received!",
-            `${latest.customerName || 'ग्राहक'} (${latest.city || 'दाङ'}) - ${getCategoryLabel(latest.category)}`
-          );
-          notifications.unshift({
-            bookingId: latest.id,
-            title: currentLanguage === 'ne' ? `नयाँ बुकिङ: ${latest.customerName || 'सेवा अर्डर'}` : `New Booking: ${latest.customerName}`,
-            message: `${latest.city || ''} | ${getCategoryLabel(latest.category)} | 📞 ${latest.customerPhone || ''}`,
-            time: new Date().toLocaleTimeString(),
-            unread: true
-          });
-          updateNotifUI();
-        }
+    function startListeners() {
+      db.collection('bookings').onSnapshot(snap => {
+        allBookings = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        allBookings.sort((a,b) => (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0));
+        updateStats();
+        renderRecentBookings();
+        renderBookingsTable();
+        updateUsersTab();
+      });
 
-        allBookings = newBookings;
-        initialSyncDone = true;
-        renderBookings();
-        updateMetrics();
-      }, (err) => console.error("Bookings err:", err));
+      db.collection('categories').onSnapshot(snap => {
+        allCategories = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        allCategories.sort((a,b) => (a.order||0) - (b.order||0));
+        document.getElementById('categoryCountBadge').innerText = allCategories.length;
+        renderCategoriesGrid();
+        populateCategoryDropdown();
+      });
 
-      // 3. Categories Listener
-      unsubscribeCategories = onSnapshot(collection(db, "categories"), (snapshot) => {
-        allCategories = [];
-        snapshot.forEach(docSnap => {
-          allCategories.push({ id: docSnap.id, ...docSnap.data() });
-        });
-        allCategories.sort((a,b) => (a.order || 99) - (b.order || 99));
-        renderCategories();
-        populateCategoryDropdowns();
-      }, (err) => console.error("Categories err:", err));
+      db.collection('providers').onSnapshot(snap => {
+        allProviders = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        document.getElementById('providerCountBadge').innerText = allProviders.length;
+        renderProvidersGrid();
+      });
     }
 
-    function stopRealtimeSync() {
-      if (unsubscribeProviders) unsubscribeProviders();
-      if (unsubscribeBookings) unsubscribeBookings();
-      if (unsubscribeCategories) unsubscribeCategories();
+    function updateStats() {
+      document.getElementById('statTotalBookings').innerText = allBookings.length;
+      document.getElementById('statPendingBookings').innerText = allBookings.filter(b => (b.status||'pending')==='pending').length;
+      document.getElementById('statInProcessBookings').innerText = allBookings.filter(b => ['in_process','in_progress'].includes(b.status)).length;
+      document.getElementById('statCompletedBookings').innerText = allBookings.filter(b => b.status==='completed').length;
+      document.getElementById('pendingBadge').innerText = allBookings.filter(b => (b.status||'pending')==='pending').length;
     }
 
-    // 7. METRICS UPDATE
-    function updateMetrics() {
-      const active = allProviders.filter(p => p.active).length;
-      const pending = allBookings.filter(b => b.status === "pending").length;
-      const inProg = allBookings.filter(b => b.status === "in_progress").length;
-      const completed = allBookings.filter(b => b.status === "completed").length;
-
-      document.getElementById("activeProvidersCount").textContent = `${active} / ${allProviders.length}`;
-      document.getElementById("pendingBookingsCount").textContent = pending;
-      document.getElementById("inProgressBookingsCount").textContent = inProg;
-      document.getElementById("completedBookingsCount").textContent = completed;
+    function renderRecentBookings() {
+      const tbody = document.getElementById('recentBookingsTbody');
+      tbody.innerHTML = allBookings.slice(0, 5).map(b => `
+        <tr class="hover:bg-slate-50">
+          <td class="py-3 px-4 font-bold">${b.customerName || 'ग्राहक'} (${b.customerPhone || ''})</td>
+          <td class="py-3 px-4 uppercase text-brand-600 font-semibold">${b.category || ''}</td>
+          <td class="py-3 px-4">${formatBookingTime(b.createdAt)}</td>
+          <td class="py-3 px-4">${b.preferredDate || ''} (${b.preferredTime || ''})</td>
+          <td class="py-3 px-4">${renderStatusBadge(b.status)}</td>
+        </tr>
+      `).join('') || '<tr><td colspan="5" class="p-4 text-center text-slate-400">कुनै बुकिङ छैन</td></tr>';
     }
 
-    // 8. BOOKINGS SYSTEM LOGIC & RENDERING
-    function renderBookings() {
-      const tbody = document.getElementById("bookingsTableBody");
-      const statusFilter = document.getElementById("bookingStatusFilter").value;
-      const cityFilter = document.getElementById("bookingCityFilter").value;
-      const search = document.getElementById("bookingSearchInput").value.trim().toLowerCase();
-
+    function renderBookingsTable() {
+      const tbody = document.getElementById('bookingsFullTbody');
+      const q = (document.getElementById('bookingSearchInput').value || '').toLowerCase();
       const filtered = allBookings.filter(b => {
-        const mStatus = statusFilter === "All" || (b.status && b.status.toLowerCase() === statusFilter.toLowerCase());
-        const mCity = cityFilter === "All" || (b.city && b.city.toLowerCase() === cityFilter.toLowerCase());
-        const mSearch = !search || 
-          (b.customerName && b.customerName.toLowerCase().includes(search)) ||
-          (b.customerPhone && b.customerPhone.includes(search)) ||
-          (b.description && b.description.toLowerCase().includes(search));
-        return mStatus && mCity && mSearch;
-      });
-
-      if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 2.5rem;">${currentLanguage === 'ne' ? 'कुनै सेवा अर्डर फेला परेन।' : 'No bookings found.'}</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = filtered.map(b => {
-        const assigned = b.assignedProviderName || b.providerName || (currentLanguage === 'ne' ? 'तोकिएको छैन' : 'Unassigned');
-        const phoneFormatted = b.customerPhone ? b.customerPhone.replace(/[^0-9]/g, '') : '';
-        const waLink = phoneFormatted ? `https://wa.me/977${phoneFormatted.slice(-10)}` : '#';
-
-        return `
-          <tr>
-            <td>
-              <strong>${escapeHtml(b.customerName || '—')}</strong><br>
-              <div style="display: flex; gap: 0.35rem; margin-top: 0.25rem;">
-                <a href="tel:${b.customerPhone}" style="color: var(--accent); font-weight: bold; text-decoration: none;" title="Direct Call">📞 ${escapeHtml(b.customerPhone || '—')}</a>
-                ${phoneFormatted ? `<a href="${waLink}" target="_blank" style="color: #25D366; text-decoration: none; font-weight: bold;" title="WhatsApp">💬</a>` : ''}
-              </div>
-            </td>
-            <td>
-              <strong>${getCategoryLabel(b.category)}</strong><br>
-              <small style="color: var(--text-muted);">👷 ${escapeHtml(assigned)}</small>
-            </td>
-            <td>
-              <strong>${escapeHtml(b.city || '')}</strong><br>
-              <small style="color: var(--text-muted);">${escapeHtml(b.address || '—')}</small>
-            </td>
-            <td style="max-width: 200px;">
-              <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${escapeHtml(b.description || '')}">
-                ${escapeHtml(b.description || '—')}
-              </div>
-            </td>
-            <td>
-              ${escapeHtml(b.preferredDate || '')}<br>
-              <small style="color: var(--text-muted);">${escapeHtml(b.preferredTime || '')}</small>
-            </td>
-            <td>${getStatusBadge(b.status)}</td>
-            <td>
-              ${b.finalAmount ? `<strong>रु. ${b.finalAmount}</strong><br>` : ''}
-              <small style="color: var(--text-muted);">${escapeHtml(b.adminRemarks || '—')}</small>
-            </td>
-            <td>
-              <div style="display: flex; gap: 0.3rem; flex-wrap: wrap;">
-                <button class="btn-primary btn-sm" onclick="openBookingModal('${b.id}')">
-                  ${currentLanguage === 'ne' ? 'व्यवस्थापन' : 'Manage'}
-                </button>
-                ${b.status === 'pending' ? `<button class="btn-accent btn-sm" onclick="quickUpdateStatus('${b.id}', 'accepted')">✓</button>` : ''}
-                ${b.status === 'accepted' ? `<button class="btn-warning btn-sm" onclick="quickUpdateStatus('${b.id}', 'in_progress')">⚙️</button>` : ''}
-                ${b.status === 'in_progress' ? `<button class="btn-accent btn-sm" onclick="quickUpdateStatus('${b.id}', 'completed')">🏁</button>` : ''}
-              </div>
-            </td>
-          </tr>
-        `;
-      }).join("");
-    }
-
-    window.quickUpdateStatus = async function(bookingId, status) {
-      try {
-        await updateDoc(doc(db, "bookings", bookingId), {
-          status: status,
-          updatedAt: serverTimestamp()
-        });
-      } catch (err) {
-        alert("Error: " + err.message);
-      }
-    };
-
-    // Booking Detail Modal
-    const bookingDetailModal = document.getElementById("bookingDetailModal");
-    window.openBookingModal = function(bookingId) {
-      const b = allBookings.find(item => item.id === bookingId);
-      if (!b) return;
-
-      document.getElementById("editBookingId").value = b.id;
-      document.getElementById("detailCustomerName").value = b.customerName || '';
-      document.getElementById("detailCustomerPhone").value = b.customerPhone || '';
-      document.getElementById("btnCallCustomer").setAttribute("href", `tel:${b.customerPhone || ''}`);
-      const cleanPhone = (b.customerPhone || '').replace(/[^0-9]/g, '').slice(-10);
-      document.getElementById("btnWhatsAppCustomer").setAttribute("href", cleanPhone ? `https://wa.me/977${cleanPhone}` : '#');
-      document.getElementById("detailCity").value = b.city || '';
-      document.getElementById("detailAddress").value = b.address || '';
-      document.getElementById("detailDescription").value = b.description || '';
-      document.getElementById("detailPreferredTime").value = `${b.preferredDate || ''} ${b.preferredTime || ''}`.trim() || 'तत्काल (As soon as possible)';
-      document.getElementById("detailStatus").value = b.status || 'pending';
-      document.getElementById("detailFinalAmount").value = b.finalAmount || '';
-      document.getElementById("detailAdminRemarks").value = b.adminRemarks || '';
-
-      // Populate provider select in modal
-      const provSelect = document.getElementById("detailAssignedProvider");
-      provSelect.innerHTML = `<option value="">-- कुनै पनि उपलब्ध प्राविधिक (Unassigned) --</option>` +
-        allProviders.map(p => `
-          <option value="${p.id}" ${ (b.assignedProviderId === p.id || b.providerId === p.id) ? 'selected' : ''}>
-            ${escapeHtml(p.name)} (${getCategoryLabel(p.category)} - ${p.city})
-          </option>
-        `).join("");
-
-      bookingDetailModal.classList.add("open");
-    };
-
-    document.getElementById("closeBookingModalBtn").addEventListener("click", () => bookingDetailModal.classList.remove("open"));
-    document.getElementById("cancelBookingModalBtn").addEventListener("click", () => bookingDetailModal.classList.remove("open"));
-
-    document.getElementById("bookingDetailForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const id = document.getElementById("editBookingId").value;
-      if (!id) return;
-
-      const provSelect = document.getElementById("detailAssignedProvider");
-      const assignedId = provSelect.value;
-      const assignedName = assignedId ? provSelect.options[provSelect.selectedIndex].text.split('(')[0].trim() : '';
-
-      const updateData = {
-        status: document.getElementById("detailStatus").value,
-        adminRemarks: document.getElementById("detailAdminRemarks").value.trim(),
-        updatedAt: serverTimestamp()
-      };
-
-      const finalAmt = parseFloat(document.getElementById("detailFinalAmount").value);
-      if (!isNaN(finalAmt) && finalAmt >= 0) {
-        updateData.finalAmount = finalAmt;
-      }
-
-      if (assignedId) {
-        updateData.assignedProviderId = assignedId;
-        updateData.assignedProviderName = assignedName;
-      }
-
-      try {
-        await updateDoc(doc(db, "bookings", id), updateData);
-        bookingDetailModal.classList.remove("open");
-      } catch (err) {
-        alert("Error: " + err.message);
-      }
-    });
-
-    document.getElementById("btnDeleteBooking").addEventListener("click", async () => {
-      const id = document.getElementById("editBookingId").value;
-      if (!id) return;
-      if (!confirm(currentLanguage === 'ne' ? "के तपाईं निश्चित रूपमा यो बुकिङ मेटाउन चाहनुहुन्छ?" : "Are you sure you want to delete this booking?")) return;
-      try {
-        await deleteDoc(doc(db, "bookings", id));
-        bookingDetailModal.classList.remove("open");
-      } catch (err) {
-        alert("Error: " + err.message);
-      }
-    });
-
-    // CSV Export for Bookings
-    document.getElementById("exportBookingsBtn").addEventListener("click", () => {
-      if (allBookings.length === 0) {
-        alert(currentLanguage === 'ne' ? "निर्यात गर्न कुनै बुकिङ उपलब्ध छैन।" : "No bookings to export.");
-        return;
-      }
-      let csv = "ID,Customer Name,Phone,Category,City,Address,Status,Remarks,Final Amount,Date\n";
-      allBookings.forEach(b => {
-        csv += `"${b.id}","${b.customerName || ''}","${b.customerPhone || ''}","${b.category || ''}","${b.city || ''}","${b.address || ''}","${b.status || ''}","${b.adminRemarks || ''}","${b.finalAmount || ''}","${b.preferredDate || ''}"\n`;
-      });
-      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.setAttribute("href", url);
-      link.setAttribute("download", `mero_sewa_bookings_${Date.now()}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    });
-
-    // 9. CATEGORIES MANAGEMENT (ADD / REMOVE CATEGORIES)
-    const categoryModal = document.getElementById("categoryModal");
-    const categoryForm = document.getElementById("categoryForm");
-
-    document.getElementById("addCategoryBtn").addEventListener("click", () => {
-      document.getElementById("catModalTitle").textContent = currentLanguage === 'ne' ? "नयाँ सेवा कोटि थप्नुहोस्" : "Add New Category";
-      categoryForm.reset();
-      document.getElementById("categoryId").value = "";
-      document.getElementById("catIconInput").value = "🛠️";
-      document.getElementById("catKeyInput").removeAttribute("readonly");
-      document.getElementById("catActiveInput").checked = true;
-      categoryModal.classList.add("open");
-    });
-
-    document.getElementById("closeCatModalBtn").addEventListener("click", () => categoryModal.classList.remove("open"));
-    document.getElementById("cancelCatModalBtn").addEventListener("click", () => categoryModal.classList.remove("open"));
-
-    categoryForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const rawKey = document.getElementById("catKeyInput").value.trim().toLowerCase().replace(/[^a-z0-9_]/g, '_');
-      const editId = document.getElementById("categoryId").value || rawKey;
-
-      if (!editId) {
-        alert("Please enter a valid key!");
-        return;
-      }
-
-      const catData = {
-        key: editId,
-        icon: document.getElementById("catIconInput").value.trim() || "🛠️",
-        nameNe: document.getElementById("catNameNeInput").value.trim(),
-        nameEn: document.getElementById("catNameEnInput").value.trim(),
-        description: document.getElementById("catDescInput").value.trim(),
-        baseRate: parseFloat(document.getElementById("catBaseRateInput").value) || 350,
-        order: parseInt(document.getElementById("catOrderInput").value) || 1,
-        active: document.getElementById("catActiveInput").checked,
-        updatedAt: serverTimestamp()
-      };
-
-      try {
-        await setDoc(doc(db, "categories", editId), catData, { merge: true });
-        categoryModal.classList.remove("open");
-      } catch (err) {
-        alert("Error: " + err.message);
-      }
-    });
-
-    function renderCategories() {
-      const grid = document.getElementById("categoryCardsGrid");
-      if (allCategories.length === 0) {
-        grid.innerHTML = `
-          <div style="grid-column: 1 / -1; text-align: center; padding: 2.5rem; background: var(--card-bg); border-radius: 14px; border: 1px dashed var(--border);">
-            <p style="color: var(--text-muted); margin-bottom: 1rem;">
-              ${currentLanguage === 'ne' ? 'कुनै सेवा कोटिहरू थपिएको छैन। कृपया "आधारभूत कोटिहरू लोड" वा "+ नयाँ कोटि थप्नुहोस्" मा क्लिक गर्नुहोस्।' : 'No categories configured. Click "Load Base Categories" to initialize.'}
-            </p>
-          </div>
-        `;
-        return;
-      }
-
-      grid.innerHTML = allCategories.map(cat => `
-        <div class="category-card">
-          <div class="category-header">
-            <div class="category-icon">${cat.icon || '🛠️'}</div>
-            <div class="category-names">
-              <h4>${escapeHtml(currentLanguage === 'ne' ? cat.nameNe : cat.nameEn || cat.nameNe)}</h4>
-              <span>${escapeHtml(cat.key)} • रु. ${cat.baseRate || 350}</span>
-            </div>
-          </div>
-          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.4;">
-            ${escapeHtml(cat.description || (currentLanguage === 'ne' ? 'कुनै विवरण छैन' : 'No description'))}
-          </p>
-          <div class="category-actions">
-            <span class="badge ${cat.active !== false ? 'badge-active' : 'badge-inactive'}">
-              ${cat.active !== false ? (currentLanguage === 'ne' ? 'सक्रिय' : 'Active') : (currentLanguage === 'ne' ? 'निष्क्रिय' : 'Inactive')}
-            </span>
-            <div style="display: flex; gap: 0.4rem;">
-              <button class="btn-outline btn-sm" onclick="editCategory('${cat.id}')">✏️</button>
-              <button class="btn-danger btn-sm" onclick="deleteCategory('${cat.id}', '${escapeHtml(cat.nameNe)}')">🗑️</button>
-            </div>
-          </div>
-        </div>
-      `).join("");
-    }
-
-    window.editCategory = function(catId) {
-      const cat = allCategories.find(c => c.id === catId);
-      if (!cat) return;
-      document.getElementById("catModalTitle").textContent = currentLanguage === 'ne' ? "कोटि सम्पादन गर्नुहोस्" : "Edit Category";
-      document.getElementById("categoryId").value = cat.id;
-      document.getElementById("catKeyInput").value = cat.key || cat.id;
-      document.getElementById("catKeyInput").setAttribute("readonly", "true");
-      document.getElementById("catIconInput").value = cat.icon || "🛠️";
-      document.getElementById("catNameNeInput").value = cat.nameNe || '';
-      document.getElementById("catNameEnInput").value = cat.nameEn || '';
-      document.getElementById("catDescInput").value = cat.description || '';
-      document.getElementById("catBaseRateInput").value = cat.baseRate || 350;
-      document.getElementById("catOrderInput").value = cat.order || 1;
-      document.getElementById("catActiveInput").checked = cat.active !== false;
-      categoryModal.classList.add("open");
-    };
-
-    window.deleteCategory = async function(catId, catName) {
-      const msg = currentLanguage === 'ne'
-        ? `के तपाईं निश्चित हुनुहुन्छ? कोटि "${catName}" लाई मेटाउँदा यो सेवा एप तथा वेबबाट हट्नेछ।`
-        : `Are you sure you want to delete category "${catName}" permanently?`;
-      if (!confirm(msg)) return;
-      try {
-        await deleteDoc(doc(db, "categories", catId));
-      } catch (err) {
-        alert("Error: " + err.message);
-      }
-    };
-
-    // Seed Initial Base Categories
-    document.getElementById("seedCategoriesBtn").addEventListener("click", async () => {
-      const defaultCategories = [
-        { key: "electrician", icon: "⚡", nameNe: "इलेक्ट्रिसियन (बिजुली मर्मत)", nameEn: "Electrician", description: "वायरिङ, सर्ट-सर्किट, इन्भर्टर जडान, फ्यान तथा स्विच बोर्ड मर्मत।", baseRate: 350, order: 1, active: true },
-        { key: "plumber", icon: "🚰", nameNe: "प्लम्बर (खानेपानी तथा ढल)", nameEn: "Plumber", description: "धारा, मोटर पम्प, बाथरुम फिटिङ, चुहावट तथा ट्याङ्की जडान।", baseRate: 350, order: 2, active: true },
-        { key: "carpenter", icon: "🪚", nameNe: "सिकर्मी (काठ तथा फर्निचर)", nameEn: "Carpentry & Furniture", description: "ढोका, झ्याल, दराज, टेबल तथा घरका फर्निचर मर्मत।", baseRate: 400, order: 3, active: true },
-        { key: "painter", icon: "🎨", nameNe: "रङरोगन (पेन्टर सेवा)", nameEn: "House Painting", description: "घरको भित्ता, ग्रिल, गेट तथा इन्टेरियर रङरोगन सेवा।", baseRate: 500, order: 4, active: true },
-        { key: "ac_repair", icon: "❄️", nameNe: "एसी तथा फ्रिज मर्मत", nameEn: "AC & Refrigeration", description: "एयर कन्डिसनर, फ्रिज, डिप-फ्रिज तथा ग्यास रिफिल।", baseRate: 600, order: 5, active: true },
-        { key: "cleaning", icon: "🧹", nameNe: "घर तथा ट्याङ्की सरसफाइ", nameEn: "Deep Cleaning & Tank", description: "पानी ट्याङ्की सफाइ, घर तथा सोफा भ्याकुम क्लिनिङ।", baseRate: 800, order: 6, active: true },
-        { key: "other_repairs", icon: "🛠️", nameNe: "अन्य घरायसी मर्मत", nameEn: "Other Home Repairs", description: "ग्यास चुल्हो, वासिङ मेसिन, ग्रिल तथा अन्य विविध मर्मत।", baseRate: 300, order: 7, active: true }
-      ];
-
-      try {
-        for (const cat of defaultCategories) {
-          cat.createdAt = serverTimestamp();
-          cat.updatedAt = serverTimestamp();
-          await setDoc(doc(db, "categories", cat.key), cat, { merge: true });
+        const s = (b.status || 'pending').toLowerCase();
+        if (currentBookingFilter !== 'all') {
+          if (currentBookingFilter === 'in_process' && !['in_process','in_progress'].includes(s)) return false;
+          else if (currentBookingFilter !== 'in_process' && s !== currentBookingFilter) return false;
         }
-        alert(currentLanguage === 'ne' ? "आधारभूत कोटिहरू सफलतापूर्वक लोड भए!" : "Base categories loaded successfully!");
-      } catch (err) {
-        alert("Error: " + err.message);
-      }
-    });
-
-    // Populate category dropdowns across forms
-    function populateCategoryDropdowns() {
-      const provCategorySelect = document.getElementById("provCategory");
-      const providerCategoryFilter = document.getElementById("providerCategoryFilter");
-
-      const options = allCategories.length > 0 
-        ? allCategories.map(c => `<option value="${c.key}">${c.icon || ''} ${currentLanguage === 'ne' ? c.nameNe : c.nameEn || c.nameNe}</option>`).join("")
-        : `
-          <option value="electrician">⚡ इलेक्ट्रिसियन (Electrician)</option>
-          <option value="plumber">🚰 प्लम्बर (Plumber)</option>
-          <option value="carpenter">🪚 सिकर्मी (Carpenter)</option>
-          <option value="painter">🎨 पेन्टर (Painter)</option>
-          <option value="other_repairs">🛠️ अन्य मर्मत (Other Repairs)</option>
-        `;
-
-      provCategorySelect.innerHTML = options;
-      providerCategoryFilter.innerHTML = `<option value="All">${currentLanguage === 'ne' ? 'सबै कोटि (All Categories)' : 'All Categories'}</option>` + options;
-    }
-
-    function populateProviderOptions() {
-      // Refresh provider options in booking detail if modal is open
-    }
-
-    function getCategoryLabel(catKey) {
-      if (!catKey) return currentLanguage === 'ne' ? '🛠️ अन्य मर्मत' : '🛠️ Other Repairs';
-      const found = allCategories.find(c => c.key === catKey || c.id === catKey);
-      if (found) {
-        return `${found.icon || '🛠️'} ${currentLanguage === 'ne' ? found.nameNe : (found.nameEn || found.nameNe)}`;
-      }
-      switch((catKey||'').toLowerCase()) {
-        case 'electrician': return currentLanguage === 'ne' ? '⚡ इलेक्ट्रिसियन' : '⚡ Electrician';
-        case 'plumber': return currentLanguage === 'ne' ? '🚰 प्लम्बर' : '🚰 Plumber';
-        case 'carpenter': return currentLanguage === 'ne' ? '🪚 सिकर्मी' : '🪚 Carpenter';
-        case 'painter': return currentLanguage === 'ne' ? '🎨 पेन्टर' : '🎨 Painter';
-        case 'ac_repair': return currentLanguage === 'ne' ? '❄️ एसी / फ्रिज' : '❄️ AC / Fridge';
-        default: return currentLanguage === 'ne' ? '🛠️ अन्य मर्मत' : '🛠️ Other Repairs';
-      }
-    }
-
-    function getStatusBadge(status) {
-      const isNe = currentLanguage === 'ne';
-      switch((status||'').toLowerCase()) {
-        case 'accepted': return `<span class="badge badge-accepted">🔵 ${isNe ? 'स्वीकृत' : 'Accepted'}</span>`;
-        case 'in_progress': return `<span class="badge badge-in_progress">⚙️ ${isNe ? 'काम सुरु' : 'In Progress'}</span>`;
-        case 'completed': return `<span class="badge badge-completed">✅ ${isNe ? 'सम्पन्न' : 'Completed'}</span>`;
-        case 'cancelled': return `<span class="badge badge-cancelled">❌ ${isNe ? 'रद्द' : 'Cancelled'}</span>`;
-        default: return `<span class="badge badge-pending">⏳ ${isNe ? 'प्रतीक्षारत' : 'Pending'}</span>`;
-      }
-    }
-
-    // 10. PROVIDER MANAGEMENT
-    function renderProviders() {
-      const tbody = document.getElementById("providersTableBody");
-      const cityFilter = document.getElementById("providerCityFilter").value;
-      const catFilter = document.getElementById("providerCategoryFilter").value;
-      const search = document.getElementById("providerSearchInput").value.trim().toLowerCase();
-
-      const filtered = allProviders.filter(p => {
-        const mCity = cityFilter === "All" || (p.city && p.city.toLowerCase() === cityFilter.toLowerCase());
-        const mCat = catFilter === "All" || (p.category && p.category.toLowerCase() === catFilter.toLowerCase());
-        const mSearch = !search || (p.name && p.name.toLowerCase().includes(search)) || (p.phone && p.phone.includes(search));
-        return mCity && mCat && mSearch;
+        if (q && !(b.customerName||'').toLowerCase().includes(q) && !(b.customerPhone||'').includes(q)) return false;
+        return true;
       });
 
-      if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2.5rem;">${currentLanguage === 'ne' ? 'कुनै सेवा प्रदायक फेला परेन।' : 'No providers found.'}</td></tr>`;
-        return;
-      }
-
-      tbody.innerHTML = filtered.map(p => `
-        <tr>
-          <td><strong>${escapeHtml(p.name)}</strong></td>
-          <td>${getCategoryLabel(p.category)}</td>
-          <td>${escapeHtml(p.city)}</td>
-          <td>
-            ${p.phone ? `<a href="tel:${p.phone}" style="color: var(--accent); font-weight: bold; text-decoration: none;">📞 ${escapeHtml(p.phone)}</a>` : '—'}
-            <br>
-            ${p.phonePublic ? `<span class="badge badge-active">${currentLanguage==='ne'?'सार्वजनिक':'Public'}</span>` : `<span class="badge badge-inactive">${currentLanguage==='ne'?'गोप्य':'Private'}</span>`}
-          </td>
-          <td>
-            <span class="badge ${p.active ? 'badge-active' : 'badge-inactive'}">
-              ${p.active ? (currentLanguage==='ne'?'सक्रिय':'Active') : (currentLanguage==='ne'?'निष्क्रिय':'Inactive')}
-            </span>
-          </td>
-          <td>⭐ ${p.rating || 4.8} (${p.experienceYears || 3} ${currentLanguage==='ne'?'वर्ष':'yrs'})</td>
-          <td>
-            <div style="display: flex; gap: 0.3rem;">
-              <button class="btn-outline btn-sm" onclick="editProvider('${p.id}')">✏️</button>
-              <button class="btn-sm ${p.active ? 'btn-danger' : 'btn-accent'}" onclick="toggleProviderActive('${p.id}', ${p.active})">
-                ${p.active ? (currentLanguage==='ne'?'निष्क्रिय':'Deactivate') : (currentLanguage==='ne'?'सक्रिय':'Activate')}
-              </button>
-              <button class="btn-danger btn-sm" onclick="deleteProvider('${p.id}', '${escapeHtml(p.name)}')">🗑️</button>
+      tbody.innerHTML = filtered.map(b => `
+        <tr class="hover:bg-slate-50">
+          <td class="py-3 px-4 font-bold text-slate-800">${b.customerName || 'ग्राहक'}<div class="text-[11px] text-slate-500">${b.customerPhone || ''} • ${b.city || ''}</div></td>
+          <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] font-bold bg-blue-50 text-blue-700">${b.category||''}</span><p class="text-slate-600 line-clamp-1">${b.description||''}</p></td>
+          <td class="py-3 px-4">${formatBookingTime(b.createdAt)}</td>
+          <td class="py-3 px-4">${b.preferredDate || ''} (${b.preferredTime || ''})</td>
+          <td class="py-3 px-4">${renderStatusBadge(b.status)}</td>
+          <td class="py-3 px-4 text-center">
+            <div class="flex gap-1 justify-center">
+              <button onclick="updateBookingStatus('${b.id}','accepted')" class="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs font-semibold">स्वीकृत</button>
+              <button onclick="updateBookingStatus('${b.id}','in_process')" class="px-2 py-1 bg-purple-50 text-purple-700 rounded text-xs font-semibold">काम सुरु</button>
+              <button onclick="updateBookingStatus('${b.id}','completed')" class="px-2 py-1 bg-emerald-50 text-emerald-700 rounded text-xs font-semibold">सम्पन्न</button>
+              <button onclick="updateBookingStatus('${b.id}','cancelled')" class="px-2 py-1 bg-red-50 text-red-600 rounded text-xs"><i class="fa-solid fa-ban"></i></button>
             </div>
           </td>
         </tr>
-      `).join("");
+      `).join('') || '<tr><td colspan="6" class="p-6 text-center text-slate-400">कुनै बुकिङ भेटिएन</td></tr>';
     }
 
-    const providerModal = document.getElementById("providerModal");
-    const providerForm = document.getElementById("providerForm");
-    
-    document.getElementById("addProviderBtn").addEventListener("click", () => {
-      document.getElementById("modalTitle").textContent = currentLanguage === 'ne' ? "नयाँ प्राविधिक थप्नुहोस्" : "Add New Provider";
-      providerForm.reset();
-      document.getElementById("providerId").value = "";
-      document.getElementById("provPhonePublic").checked = true;
-      document.getElementById("provActive").checked = true;
-      providerModal.classList.add("open");
-    });
-
-    document.getElementById("closeModalBtn").addEventListener("click", () => providerModal.classList.remove("open"));
-    document.getElementById("cancelModalBtn").addEventListener("click", () => providerModal.classList.remove("open"));
-
-    window.editProvider = function(id) {
-      const p = allProviders.find(item => item.id === id);
-      if (!p) return;
-      document.getElementById("modalTitle").textContent = currentLanguage === 'ne' ? "प्राविधिक विवरण सम्पादन" : "Edit Provider Details";
-      document.getElementById("providerId").value = p.id;
-      document.getElementById("provName").value = p.name || '';
-      document.getElementById("provCategory").value = p.category || 'electrician';
-      document.getElementById("provCity").value = p.city || 'Tulsipur';
-      document.getElementById("provDesc").value = p.description || '';
-      document.getElementById("provPhone").value = p.phone || '';
-      document.getElementById("provExp").value = p.experienceYears || 3;
-      document.getElementById("provRating").value = p.rating || 4.8;
-      document.getElementById("provPhonePublic").checked = p.phonePublic !== false;
-      document.getElementById("provActive").checked = p.active !== false;
-      providerModal.classList.add("open");
-    };
-
-    providerForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const id = document.getElementById("providerId").value;
-      const data = {
-        name: document.getElementById("provName").value.trim(),
-        category: document.getElementById("provCategory").value,
-        city: document.getElementById("provCity").value,
-        description: document.getElementById("provDesc").value.trim(),
-        phone: document.getElementById("provPhone").value.trim(),
-        phonePublic: document.getElementById("provPhonePublic").checked,
-        active: document.getElementById("provActive").checked,
-        experienceYears: parseInt(document.getElementById("provExp").value) || 3,
-        rating: parseFloat(document.getElementById("provRating").value) || 4.8,
-        updatedAt: serverTimestamp()
-      };
-
-      try {
-        if (id) {
-          await updateDoc(doc(db, "providers", id), data);
-        } else {
-          data.createdAt = serverTimestamp();
-          await setDoc(doc(collection(db, "providers")), data);
-        }
-        providerModal.classList.remove("open");
-      } catch (err) {
-        alert("Error: " + err.message);
-      }
-    });
-
-    window.toggleProviderActive = async function(id, currentActive) {
-      try {
-        await updateDoc(doc(db, "providers", id), {
-          active: !currentActive,
-          updatedAt: serverTimestamp()
-        });
-      } catch (err) {
-        alert("Error: " + err.message);
-      }
-    };
-
-    window.deleteProvider = async function(id, name) {
-      const confirmMsg = currentLanguage === 'ne'
-        ? `के तपाईं निश्चित हुनुहुन्छ? प्राविधिक "${name}" लाई मेटाउँदा ब्याकइन्डबाट सधैंका लागि हट्नेछ।`
-        : `Are you sure you want to delete provider "${name}" permanently?`;
-      if (!confirm(confirmMsg)) return;
-      try {
-        await deleteDoc(doc(db, "providers", id));
-      } catch (err) {
-        alert("Error: " + err.message);
-      }
-    };
-
-    // Seed Providers
-    document.getElementById("seedBtn").addEventListener("click", async () => {
-      if (allProviders.length > 0 && !confirm(currentLanguage === 'ne' ? "डेटाबेसमा पहिले नै प्राविधिकहरू छन्। के तपाईं फेरि नमुना प्राविधिकहरू थप्न चाहनुहुन्छ?" : "Database already has providers. Load more seed providers?")) return;
-      
-      const seedData = [
-        { name: "राम बहादुर थापा (Ram B. Thapa)", category: "electrician", city: "Tulsipur", description: "घर तथा पसलको वायरिङ, इन्भर्टर जडान र बिजुली मर्मतमा १० वर्षको अनुभव।", phone: "9847812345", phonePublic: true, active: true, rating: 4.9, experienceYears: 10 },
-        { name: "सुरेश चौधरी (Suresh Chaudhary)", category: "plumber", city: "Tulsipur", description: "धारा चुहावट, नयाँ पाइप फिटिङ र सेनेटरी सम्बन्धी भरपर्दो सेवा।", phone: "9809823456", phonePublic: true, active: true, rating: 4.8, experienceYears: 7 },
-        { name: "कमल श्रेष्ठ (Kamal Shrestha)", category: "other_repairs", city: "Tulsipur", description: "रेफ्रिजरेटर, वासिङ मेसिन र मोटर पम्प मर्मत विशेषज्ञ।", phone: "9857834567", phonePublic: true, active: true, rating: 4.7, experienceYears: 8 },
-        { name: "दिनेश शर्मा (Dinesh Sharma)", category: "electrician", city: "Ghorahi", description: "घोराही बजार क्षेत्रमा छिटो र सस्तो बिजुली सेवा, थ्री-फेज लाइन मर्मत।", phone: "9847198765", phonePublic: true, active: true, rating: 4.9, experienceYears: 6 },
-        { name: "सन्तोष बुढा (Santosh Budha)", category: "plumber", city: "Ghorahi", description: "बाथरुम फिटिङ, गिजिर जडान तथा ढल निकास मर्मत।", phone: "9812345678", phonePublic: false, active: true, rating: 4.6, experienceYears: 5 },
-        { name: "प्रकाश घर्ती (Prakash Gharti)", category: "other_repairs", city: "Lamahi", description: "ग्यास चुल्हो र घरायसी विद्युतीय उपकरण मर्मत केन्द्र।", phone: "9867011223", phonePublic: true, active: true, rating: 4.7, experienceYears: 4 }
-      ];
-
-      try {
-        for (const item of seedData) {
-          item.createdAt = serverTimestamp();
-          item.updatedAt = serverTimestamp();
-          await setDoc(doc(collection(db, "providers")), item);
-        }
-        alert(currentLanguage === 'ne' ? "नमुना प्राविधिकहरू सफलतापूर्वक लोड भए!" : "Seed providers loaded successfully!");
-      } catch (err) {
-        alert("Error: " + err.message);
-      }
-    });
-
-    // 11. SETTINGS & SYSTEM CONFIGURATION
-    async function loadSettings() {
-      try {
-        const snap = await getDoc(doc(db, "settings", "general"));
-        if (snap.exists()) {
-          const d = snap.data();
-          if (d.appName) document.getElementById("settingAppName").value = d.appName;
-          if (d.mainHub) document.getElementById("settingMainHub").value = d.mainHub;
-          if (d.helpline) document.getElementById("settingHelpline").value = d.helpline;
-          if (d.supportEmail) document.getElementById("settingSupportEmail").value = d.supportEmail;
-          if (d.bannerTextNe) document.getElementById("settingBannerTextNe").value = d.bannerTextNe;
-          if (d.bannerTextEn) document.getElementById("settingBannerTextEn").value = d.bannerTextEn;
-          document.getElementById("settingBannerActive").checked = d.bannerActive !== false;
-
-          // Apply announcement banner in UI
-          const banner = document.getElementById("announcementBanner");
-          if (d.bannerActive) {
-            banner.style.display = "block";
-            document.getElementById("announcementText").textContent = currentLanguage === 'ne' ? d.bannerTextNe : (d.bannerTextEn || d.bannerTextNe);
-          } else {
-            banner.style.display = "none";
-          }
-        }
-      } catch (e) {
-        console.warn("Load settings error:", e);
-      }
+    function filterBookings(s) {
+      currentBookingFilter = s;
+      document.querySelectorAll('.booking-filter').forEach(b => b.className = 'booking-filter px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 text-slate-700');
+      document.getElementById(`bfilter-${s}`).className = 'booking-filter px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-900 text-white';
+      renderBookingsTable();
     }
 
-    document.getElementById("settingsBusinessForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      try {
-        await setDoc(doc(db, "settings", "general"), {
-          appName: document.getElementById("settingAppName").value.trim(),
-          mainHub: document.getElementById("settingMainHub").value.trim(),
-          helpline: document.getElementById("settingHelpline").value.trim(),
-          supportEmail: document.getElementById("settingSupportEmail").value.trim(),
-          updatedAt: serverTimestamp()
-        }, { merge: true });
-        alert(currentLanguage === 'ne' ? "व्यावसायिक प्रोफाइल सफलतापूर्वक सेभ भयो!" : "Business profile saved successfully!");
-      } catch (err) {
-        alert("Error: " + err.message);
-      }
-    });
-
-    document.getElementById("settingsNoticeForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const isActive = document.getElementById("settingBannerActive").checked;
-      const textNe = document.getElementById("settingBannerTextNe").value.trim();
-      const textEn = document.getElementById("settingBannerTextEn").value.trim();
-      try {
-        await setDoc(doc(db, "settings", "general"), {
-          bannerActive: isActive,
-          bannerTextNe: textNe,
-          bannerTextEn: textEn,
-          updatedAt: serverTimestamp()
-        }, { merge: true });
-
-        const banner = document.getElementById("announcementBanner");
-        if (isActive) {
-          banner.style.display = "block";
-          document.getElementById("announcementText").textContent = currentLanguage === 'ne' ? textNe : textEn;
-        } else {
-          banner.style.display = "none";
-        }
-        alert(currentLanguage === 'ne' ? "सूचना ब्यानर सफलतापूर्वक अपडेट भयो!" : "Announcement banner updated!");
-      } catch (err) {
-        alert("Error: " + err.message);
-      }
-    });
-
-    // 12. TAB SWITCHING
-    document.querySelectorAll(".tab-btn").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-        document.querySelectorAll(".tab-content").forEach(c => c.style.display = "none");
-        btn.classList.add("active");
-        const target = document.getElementById(btn.dataset.tab);
-        if (target) target.style.display = "block";
+    async function updateBookingStatus(id, status) {
+      await db.collection('bookings').doc(id).update({
+        status: status,
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
       });
-    });
-
-    // Filters & Search Listeners
-    document.getElementById("providerCityFilter").addEventListener("change", renderProviders);
-    document.getElementById("providerCategoryFilter").addEventListener("change", renderProviders);
-    document.getElementById("providerSearchInput").addEventListener("input", renderProviders);
-    document.getElementById("bookingStatusFilter").addEventListener("change", renderBookings);
-    document.getElementById("bookingCityFilter").addEventListener("change", renderBookings);
-    document.getElementById("bookingSearchInput").addEventListener("input", renderBookings);
-
-    function escapeHtml(str) {
-      if (!str) return '';
-      return String(str).replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[m]);
+      showToast(`स्थिति परिवर्तन भयो: ${status}`);
     }
 
-    // Initialize UI and Language
-    applyLanguage();
-    checkAdminRegistrationStatus();
+    function renderCategoriesGrid() {
+      const c = document.getElementById('categoriesGrid');
+      c.innerHTML = allCategories.map(cat => `
+        <div class="bg-white rounded-2xl border p-4 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <i class="fa-solid ${cat.icon || 'fa-wrench'} text-brand-600 text-lg"></i>
+              <button onclick="deleteCategory('${cat.id}','${cat.nameNepali||cat.name}')" class="text-slate-400 hover:text-red-500"><i class="fa-solid fa-trash-can"></i></button>
+            </div>
+            <h4 class="font-bold text-slate-900 font-nepali">${cat.nameNepali || cat.name}</h4>
+            <div class="text-xs text-brand-600">${cat.nameEnglish || cat.name} [id: ${cat.id}]</div>
+            <p class="text-xs text-slate-500 mt-1 line-clamp-2">${cat.descriptionNepali || cat.description || ''}</p>
+          </div>
+          <div class="mt-3 pt-2 border-t text-[11px] text-emerald-600 font-bold flex justify-between">
+            <span>Order: ${cat.order || 1}</span>
+            <span>Active in App</span>
+          </div>
+        </div>
+      `).join('') || '<div class="col-span-full p-6 text-center text-slate-400">कुनै क्याटोगोरी छैन।</div>';
+    }
+
+    function openAddCategoryModal() {
+      document.getElementById('catKey').value = '';
+      document.getElementById('catNameNepali').value = '';
+      document.getElementById('catNameEnglish').value = '';
+      document.getElementById('catDescription').value = '';
+      document.getElementById('catOrder').value = allCategories.length + 1;
+      document.getElementById('categoryModal').classList.remove('hidden');
+    }
+    function closeCategoryModal() { document.getElementById('categoryModal').classList.add('hidden'); }
+
+    async function saveCategory(e) {
+      e.preventDefault();
+      const key = document.getElementById('catKey').value.trim().toLowerCase().replace(/ /g, '_');
+      const nep = document.getElementById('catNameNepali').value.trim();
+      const eng = document.getElementById('catNameEnglish').value.trim();
+      const desc = document.getElementById('catDescription').value.trim();
+      const order = parseInt(document.getElementById('catOrder').value) || 1;
+      const icon = document.getElementById('catIcon').value.trim() || 'fa-wrench';
+
+      await db.collection('categories').doc(key).set({
+        name: eng || nep,
+        nameNepali: nep,
+        nameEnglish: eng,
+        labelNepali: nep,
+        labelEnglish: eng,
+        description: desc,
+        descriptionNepali: desc,
+        order: order,
+        icon: icon,
+        active: true,
+        status: 'active',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      }, { merge: true });
+
+      closeCategoryModal();
+      showToast(`क्याटोगोरी '${nep}' सुरक्षित गरियो!`);
+    }
+
+    async function deleteCategory(id, name) {
+      if (!confirm(`के '${name}' क्याटोगोरी हटाउने? यो एपबाट तुरुन्त हट्नेछ।`)) return;
+      await db.collection('categories').doc(id).delete();
+      showToast(`क्याटोगोरी '${name}' हटाइयो!`);
+    }
+
+    async function seedDefaultCategories() {
+      const defaults = [
+        { id: 'electrician', name: 'Electrician', nameNepali: 'इलेक्ट्रिसियन', nameEnglish: 'Electrician', description: 'वायरिङ, स्विचबोर्ड, मिटर र बिजुली मर्मत', order: 1, icon: 'fa-bolt' },
+        { id: 'plumber', name: 'Plumber', nameNepali: 'प्लम्बर', nameEnglish: 'Plumber', description: 'धारा, पाइप फिटिङ, चुहावट र सेनेटरी मर्मत', order: 2, icon: 'fa-faucet' },
+        { id: 'cleaning', name: 'Cleaning', nameNepali: 'सरसफाइ सेवा', nameEnglish: 'Cleaning', description: 'घर, अफिस, ट्याङ्की र गहिरो सरसफाइ सेवा', order: 3, icon: 'fa-broom' },
+        { id: 'painting', name: 'Painting', nameNepali: 'रंगरोगन', nameEnglish: 'Painting', description: 'भित्ता, ढोका, झ्याल र घरको पेन्टिङ कार्य', order: 4, icon: 'fa-paint-roller' },
+        { id: 'carpentry', name: 'Carpentry', nameNepali: 'काठको काम', nameEnglish: 'Carpentry', description: 'फर्निचर, ढोका, झ्याल र काठ मर्मत', order: 5, icon: 'fa-hammer' },
+        { id: 'other_repairs', name: 'Other Repairs', nameNepali: 'अन्य मर्मत', nameEnglish: 'Other Repairs', description: 'टिभी, फ्रिज, मोटर, ग्यास चुल्हो मर्मत', order: 6, icon: 'fa-toolbox' }
+      ];
+      const batch = db.batch();
+      defaults.forEach(c => {
+        batch.set(db.collection('categories').doc(c.id), { ...c, active: true, status: 'active' }, { merge: true });
+      });
+      await batch.commit();
+      showToast("डिफल्ट क्याटोगोरीहरू रिस्टोर गरियो!");
+    }
+
+    function populateCategoryDropdown() {
+      const s = document.getElementById('provCategory');
+      if (s) s.innerHTML = allCategories.map(c => `<option value="${c.id}">${c.nameNepali || c.name}</option>`).join('');
+    }
+
+    function renderProvidersGrid() {
+      const c = document.getElementById('providersGrid');
+      c.innerHTML = allProviders.map(p => `
+        <div class="bg-white rounded-2xl border p-4 shadow-sm">
+          <div class="flex justify-between items-start">
+            <div>
+              <h4 class="font-bold text-slate-900 font-nepali">${p.name || ''}</h4>
+              <div class="text-xs text-brand-600 uppercase font-semibold">${p.category || ''} • ${p.city || ''}</div>
+              <div class="text-xs text-emerald-700 font-bold mt-1"><i class="fa-solid fa-phone"></i> ${p.phone || ''}</div>
+            </div>
+            <button onclick="deleteProvider('${p.id}','${p.name||''}')" class="text-slate-400 hover:text-red-500"><i class="fa-solid fa-trash-can"></i></button>
+          </div>
+        </div>
+      `).join('') || '<div class="col-span-full p-6 text-center text-slate-400">कुनै प्राविधिक छैन।</div>';
+    }
+
+    function openAddProviderModal() {
+      populateCategoryDropdown();
+      document.getElementById('providerModal').classList.remove('hidden');
+    }
+    function closeProviderModal() { document.getElementById('providerModal').classList.add('hidden'); }
+
+    async function saveProvider(e) {
+      e.preventDefault();
+      await db.collection('providers').add({
+        name: document.getElementById('provName').value.trim(),
+        category: document.getElementById('provCategory').value,
+        city: document.getElementById('provCity').value,
+        phone: document.getElementById('provPhone').value.trim(),
+        description: document.getElementById('provDescription').value.trim(),
+        experienceYears: 3, rating: 4.8, active: true, phonePublic: true, status: 'active',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+      closeProviderModal();
+      showToast("प्राविधिक थपियो!");
+    }
+
+    async function deleteProvider(id, name) {
+      if (!confirm(`के '${name}' लाई हटाउने?`)) return;
+      await db.collection('providers').doc(id).delete();
+      showToast("प्राविधिक हटाइयो!");
+    }
+
+    function updateUsersTab() {
+      const userMap = new Map();
+      allBookings.forEach(b => {
+        const uid = b.customerUid || b.customerPhone || 'unknown';
+        if (!userMap.has(uid)) {
+          userMap.set(uid, { name: b.customerName||'ग्राहक', phone: b.customerPhone||'N/A', city: b.city||'Tulsipur', count: 1, lastTime: b.createdAt });
+        } else {
+          userMap.get(uid).count += 1;
+        }
+      });
+      document.getElementById('userCountBadge').innerText = userMap.size;
+      const tbody = document.getElementById('usersTbody');
+      tbody.innerHTML = Array.from(userMap.values()).map(u => `
+        <tr class="hover:bg-slate-50">
+          <td class="py-3 px-4 font-bold">${u.name}</td>
+          <td class="py-3 px-4 text-brand-600 font-semibold">${u.phone}</td>
+          <td class="py-3 px-4">${u.city}</td>
+          <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full bg-slate-100 font-bold">${u.count} अर्डर</span></td>
+          <td class="py-3 px-4">${formatBookingTime(u.lastTime)}</td>
+        </tr>
+      `).join('') || '<tr><td colspan="5" class="p-4 text-center text-slate-400">कुनै प्रयोगकर्ता छैन।</td></tr>';
+    }
+
+    function switchTab(t) {
+      document.querySelectorAll('.tab-content').forEach(e => e.classList.add('hidden'));
+      document.querySelectorAll('.nav-item').forEach(e => e.className = 'nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition text-slate-400 hover:text-white hover:bg-slate-800');
+      document.getElementById(`tab-${t}`).classList.remove('hidden');
+      document.getElementById(`nav-${t}`).className = 'nav-item w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition text-white bg-brand-600 shadow-md';
+      if (window.innerWidth < 768) document.getElementById('sidebar').classList.add('-translate-x-full');
+    }
+
+    document.getElementById('openSidebarBtn').addEventListener('click', () => document.getElementById('sidebar').classList.remove('-translate-x-full'));
+    document.getElementById('closeSidebarBtn').addEventListener('click', () => document.getElementById('sidebar').classList.add('-translate-x-full'));
   </script>
 </body>
 </html>
